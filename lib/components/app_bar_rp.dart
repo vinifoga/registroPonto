@@ -3,18 +3,20 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../constants.dart';
 
-class AppBarRp extends StatelessWidget implements PreferredSizeWidget{
+class AppBarRp extends StatelessWidget implements PreferredSizeWidget {
   final String appBarTitle;
   final bool showImage;
-  const AppBarRp({Key? key, required this.appBarTitle, required this.showImage}) : super(key: key);
+
+  const AppBarRp({Key? key, required this.appBarTitle, required this.showImage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
       toolbarHeight: 88,
-      backgroundColor: kSecondaryColor,
-      title: Column(
+      backgroundColor: kPrimaryLightColor,
+      title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -26,7 +28,16 @@ class AppBarRp extends StatelessWidget implements PreferredSizeWidget{
               height: 52,
             ),
           ),
-          Text(appBarTitle,style: GoogleFonts.robotoCondensed(),)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              appBarTitle,
+              style: GoogleFonts.robotoCondensed(
+                color: Colors.black,
+                fontSize: 24.0,
+              ),
+            ),
+          )
         ],
       ),
     );
