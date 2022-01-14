@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
+import 'package:registroponto/components/bottom_app_bar_option.dart';
+import 'package:registroponto/screens/exit.dart';
 
 import '../constants.dart';
 
@@ -48,43 +50,94 @@ class Dashboard extends StatelessWidget {
         shape: const CircularNotchedRectangle(),
         notchMargin: 6,
         child: Row(
-          //children inside bottom appbar
-          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.exit_to_app,
-                  color: Colors.white,
-                ),
-                onPressed: () {},
-              ),
-            IconButton(
-              icon: Icon(
-                Icons.warning,
-                color: Colors.white,
-              ),
-              onPressed: () {},
+            BottomAppBarOption(
+              icon: Icons.exit_to_app,
+              onClick: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const Exit(),
+                  ),
+                );
+              },
             ),
-            IconButton(
-              icon: Icon(
-                Icons.upload_file,
-                color: Colors.white,
-              ),
-              onPressed: () {},
+            BottomAppBarOption(
+              icon: Icons.warning,
+              onClick: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const Alerts(),
+                  ),
+                );
+              },
+            ),
+            BottomAppBarOption(
+              icon: Icons.upload_file,
+              onClick: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const Exit(),
+                  ),
+                );
+              },
             ),
             Padding(
               padding: const EdgeInsets.only(right: 80.0),
-              child: IconButton(
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                ),
-                onPressed: () {},
+              child: BottomAppBarOption(
+                icon: Icons.edit,
+                onClick: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const Exit(),
+                    ),
+                  );
+                },
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class Alerts extends StatelessWidget {
+  const Alerts({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBarRp(
+        appBarTitle: 'Alertas',
+        showImage: true,
+      ),
+      body: ListView(
+        padding: EdgeInsets.all(8),
+        children: [
+          Card(
+            child: ListTile(
+              title: const Text('Hora de Trabalhar'),
+              subtitle: const Text(
+                  'Avise-me quando chegar a hora de iniciar o turno de trabalho'),
+              trailing: Checkbox(
+                onChanged: (bool? value) {},
+                value: false,
+              ),
+              tileColor: kPrimaryLightColor,
+            ),
+          ),
+          const Card(
+            child: ListTile(
+              title: Text('Antecipar Aviso'),
+              subtitle: TextField(
+                decoration: InputDecoration(
+                ),
+              ),
+              tileColor: kPrimaryLightColor,
+            ),
+          ),
+        ],
       ),
     );
   }
