@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/components/bottom_app_bar_option.dart';
 import 'package:registroponto/screens/exit.dart';
+import 'package:registroponto/screens/punch_clocking.dart';
 
 import '../constants.dart';
+import 'alerts.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -14,7 +16,7 @@ class Dashboard extends StatelessWidget {
       appBar: const AppBarRp(appBarTitle: 'Últimas Marcações', showImage: true),
       body: ListView(
         padding: const EdgeInsets.all(8),
-        children: const <Widget>[
+        children: <Widget>[
           Card(
             child: ListTile(
               title: Text('Entrada'),
@@ -37,6 +39,24 @@ class Dashboard extends StatelessWidget {
               tileColor: kPrimaryLightColor,
             ),
           ),
+          GestureDetector(
+              child: Card(
+                child: ListTile(
+                  title: Text('Ver mais'),
+                  trailing: Icon(
+                    Icons.add,
+                    color: Colors.blue,
+                  ),
+                  tileColor: kPrimaryLightColor,
+                ),
+              ),
+              onTap: () => {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PunchClocking(),
+                      ),
+                    )
+                  }),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -97,47 +117,6 @@ class Dashboard extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class Alerts extends StatelessWidget {
-  const Alerts({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarRp(
-        appBarTitle: 'Alertas',
-        showImage: true,
-      ),
-      body: ListView(
-        padding: EdgeInsets.all(8),
-        children: [
-          Card(
-            child: ListTile(
-              title: const Text('Hora de Trabalhar'),
-              subtitle: const Text(
-                  'Avise-me quando chegar a hora de iniciar o turno de trabalho'),
-              trailing: Checkbox(
-                onChanged: (bool? value) {},
-                value: false,
-              ),
-              tileColor: kPrimaryLightColor,
-            ),
-          ),
-          const Card(
-            child: ListTile(
-              title: Text('Antecipar Aviso'),
-              subtitle: TextField(
-                decoration: InputDecoration(
-                ),
-              ),
-              tileColor: kPrimaryLightColor,
-            ),
-          ),
-        ],
       ),
     );
   }
