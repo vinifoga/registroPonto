@@ -7,7 +7,10 @@ class AppBarRp extends StatelessWidget implements PreferredSizeWidget {
   final String appBarTitle;
   final bool showImage;
 
-  const AppBarRp({Key? key, required this.appBarTitle, required this.showImage})
+  const AppBarRp(
+      {Key? key,
+      required this.appBarTitle,
+      required this.showImage})
       : super(key: key);
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/constants.dart';
+import 'package:registroponto/screens/reclaim_punch.dart';
 
 class PunchClocking extends StatefulWidget {
   PunchClocking({Key? key}) : super(key: key);
@@ -69,7 +70,13 @@ class _PunchClockingState extends State<PunchClocking> {
       floatingActionButton: Visibility(
         visible: _index == 0 ? false : true,
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () => {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ReclaimPunch(),
+              ),
+            ),
+          },
           child: const Icon(Icons.add),
           backgroundColor: floatActionButtonColor,
         ),

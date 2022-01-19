@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "308476925433",
+    "project_id": "registro-ponto-ca864",
+    "storage_bucket": "registro-ponto-ca864.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308476925433:android:68bdb23ac65890a775d928",
+        "android_client_info": {
+          "package_name": "com.example.registroponto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "308476925433-qvmui92t5u1db6ushafd5vgvdbs1ft1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk0l8EJe5clE3FJuTt3qlIBLMofQcseVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "308476925433-qvmui92t5u1db6ushafd5vgvdbs1ft1e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
