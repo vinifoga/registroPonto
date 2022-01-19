@@ -3,6 +3,7 @@ import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/components/bottom_app_bar_option.dart';
 import 'package:registroponto/screens/exit.dart';
 import 'package:registroponto/screens/punch_clocking.dart';
+import 'package:registroponto/screens/upload_file.dart';
 
 import '../constants.dart';
 import 'alerts.dart';
@@ -97,7 +98,7 @@ class Dashboard extends StatelessWidget {
               onClick: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const Exit(),
+                    builder: (context) => const UploadFile(),
                   ),
                 );
               },

@@ -64,8 +64,15 @@ class _PunchClockingState extends State<PunchClocking> {
             ],
           ),
           selectedItem(_index),
-
         ],
+      ),
+      floatingActionButton: Visibility(
+        visible: _index == 0 ? false : true,
+        child: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.add),
+          backgroundColor: floatActionButtonColor,
+        ),
       ),
     );
   }
