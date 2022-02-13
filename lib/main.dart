@@ -19,7 +19,7 @@ class RegistroPonto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Registro Ponto',
+      title: 'Registro Ponto ',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: kPrimaryColor,
