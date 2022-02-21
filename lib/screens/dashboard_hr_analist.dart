@@ -11,14 +11,14 @@ import 'alerts.dart';
 
 Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/registros");
 
-class Dashboard extends StatelessWidget {
-  const Dashboard(String tokenEnvia, {Key? key}) : super(key: key);
+class DashboardHRAnalist extends StatelessWidget {
+  const DashboardHRAnalist(String tokenEnvia, {Key? key}) : super(key: key);
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarRp(appBarTitle: 'Últimas Marcações', showImage: true),
+      appBar: const AppBarRp(appBarTitle: 'Responsavel RH', showImage: true),
       body: ListView(
         padding: const EdgeInsets.all(8),
         children: <Widget>[

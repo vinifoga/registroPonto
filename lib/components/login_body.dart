@@ -1,16 +1,19 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:registroponto/components/rounded_button.dart';
 import 'package:http/http.dart' as http;
+import 'package:registroponto/models/roles.dart';
+import 'package:registroponto/models/user.dart';
 import 'package:registroponto/screens/dashboard.dart';
+import 'package:registroponto/screens/dashboard_hr_analist.dart';
 
 import '../constants.dart';
 import 'background.dart';
 
 Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/auth");
+Uri urlUser = Uri.parse("https://registro-ponto-api.herokuapp.com/usuarios");
 
 class LoginBody extends StatefulWidget {
   const LoginBody({Key? key}) : super(key: key);
@@ -23,6 +26,7 @@ class _LoginBodyState extends State<LoginBody> {
   final formKey = GlobalKey<FormState>();
   late String _email = '';
   late String _password = '';
+  bool _isLoading = false;
 
   bool validateAndSave() {
     final form = formKey.currentState;
@@ -37,6 +41,9 @@ class _LoginBodyState extends State<LoginBody> {
     if (validateAndSave()) {
       print(_email);
       print(_password);
+      setState(() {
+        _isLoading = true;
+      });
       var response = await http.post(
         url,
         headers: {'Content-type': 'application/json'},
@@ -46,9 +53,40 @@ class _LoginBodyState extends State<LoginBody> {
       var responseDecode = jsonDecode(response.body);
       var token = responseDecode['token'];
       var tipo = responseDecode['tipo'];
-      var tokenEnvia = tipo + ' ' + token;
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Dashboard()));
+      String tokenEnvia = tipo + ' ' + token;
+
+      Uri urlUserByEmail = Uri.parse(urlUser.toString() + "/email/" + _email);
+
+      var responseUser = await http.get(
+          urlUserByEmail,
+          headers: {
+            'Content-type': 'application/json',
+            'Authorization': tokenEnvia
+          }
+      );
+
+      Map<String, dynamic> userMap = jsonDecode(responseUser.body.toString());
+      User user = User.fromJson(userMap);
+      String perfil = '';
+      for(Roles role in user.roles){
+        if(role.nomeRole == 'ROLE_RESPONSAVEL_RH'){
+          perfil = 'responsavelRh';
+        } else if(role.nomeRole == 'ROLE_COLABORADOR') {
+          perfil = 'colaborador';
+        }
+      }
+      setState(() {
+        _isLoading=false;
+      });
+      if(perfil == ''){
+
+      } else if(perfil == 'responsavelRh'){
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => DashboardHRAnalist(tokenEnvia)));
+      } else if(perfil == 'colaborador'){
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Dashboard(tokenEnvia)));
+      }
     }
   }
 
@@ -95,9 +133,15 @@ class _LoginBodyState extends State<LoginBody> {
                 //   icon: Icons.person,
                 // ),
                 // RoundedPasswordField(onChanged: (value) {}),
+
                 RoundedButton(
                     text: "LOGIN",
                     press: () {
+                      const AlertDialog(
+                        content: CircularProgressIndicator(
+                          strokeWidth: 5,
+                        ),
+                      );
                       validateAndSubmit();
                     },
                     textColor: Colors.white),
@@ -114,6 +158,13 @@ class _LoginBodyState extends State<LoginBody> {
                 //     );
                 //   },
                 // ),
+                Container(
+                  padding: const EdgeInsets.all(50),
+                  margin: const EdgeInsets.all(50),
+                  child: Center(
+                    child: !_isLoading ? const Text ('') : const CircularProgressIndicator(),
+                  ),
+                ),
               ],
             ),
           )),
