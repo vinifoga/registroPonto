@@ -27,6 +27,7 @@ class _LoginBodyState extends State<LoginBody> {
   late String _email = '';
   late String _password = '';
   bool _isLoading = false;
+  bool _showError = false;
 
   bool validateAndSave() {
     final form = formKey.currentState;
@@ -39,53 +40,58 @@ class _LoginBodyState extends State<LoginBody> {
 
   void validateAndSubmit() async {
     if (validateAndSave()) {
-      print(_email);
-      print(_password);
       setState(() {
         _isLoading = true;
+        _showError = false;
       });
-      var response = await http.post(
-        url,
-        headers: {'Content-type': 'application/json'},
-        body: jsonEncode({'email': _email, 'senha': _password}),
-      );
-      print(response.body);
-      var responseDecode = jsonDecode(response.body);
-      var token = responseDecode['token'];
-      var tipo = responseDecode['tipo'];
-      String tokenEnvia = tipo + ' ' + token;
+      try {
+        var response = await http.post(
+          url,
+          headers: {'Content-type': 'application/json'},
+          body: jsonEncode({'email': _email, 'senha': _password}),
+        );
+        print(response.body);
+        var responseDecode = jsonDecode(response.body);
+        var token = responseDecode['token'];
+        var tipo = responseDecode['tipo'];
+        String tokenEnvia = tipo + ' ' + token;
 
-      Uri urlUserByEmail = Uri.parse(urlUser.toString() + "/email/" + _email);
+        Uri urlUserByEmail = Uri.parse(urlUser.toString() + "/email/" + _email);
 
-      var responseUser = await http.get(
-          urlUserByEmail,
-          headers: {
-            'Content-type': 'application/json',
-            'Authorization': tokenEnvia
+        var responseUser = await http.get(urlUserByEmail, headers: {
+          'Content-type': 'application/json',
+          'Authorization': tokenEnvia
+        });
+
+        Map<String, dynamic> userMap = jsonDecode(responseUser.body.toString());
+        User user = User.fromJson(userMap);
+        String perfil = '';
+        for (Roles role in user.roles) {
+          if (role.nomeRole == 'ROLE_RESPONSAVEL_RH') {
+            perfil = 'responsavelRh';
+          } else if (role.nomeRole == 'ROLE_COLABORADOR') {
+            perfil = 'colaborador';
           }
-      );
-
-      Map<String, dynamic> userMap = jsonDecode(responseUser.body.toString());
-      User user = User.fromJson(userMap);
-      String perfil = '';
-      for(Roles role in user.roles){
-        if(role.nomeRole == 'ROLE_RESPONSAVEL_RH'){
-          perfil = 'responsavelRh';
-        } else if(role.nomeRole == 'ROLE_COLABORADOR') {
-          perfil = 'colaborador';
         }
-      }
-      setState(() {
-        _isLoading=false;
-      });
-      if(perfil == ''){
-
-      } else if(perfil == 'responsavelRh'){
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => DashboardHRAnalist(tokenEnvia)));
-      } else if(perfil == 'colaborador'){
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Dashboard(tokenEnvia)));
+        setState(() {
+          _isLoading = false;
+        });
+        if (perfil == '') {
+        } else if (perfil == 'responsavelRh') {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DashboardHRAnalist(tokenEnvia)));
+        } else if (perfil == 'colaborador') {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => Dashboard(tokenEnvia)));
+        }
+      } catch (e) {
+        print(e);
+        setState(() {
+          _isLoading = false;
+          _showError = true;
+        });
       }
     }
   }
@@ -133,7 +139,15 @@ class _LoginBodyState extends State<LoginBody> {
                 //   icon: Icons.person,
                 // ),
                 // RoundedPasswordField(onChanged: (value) {}),
-
+                Visibility(
+                  visible: _showError,
+                  child: Container(
+                    margin: EdgeInsets.only(top:6),
+                    child: const Center(
+                      child: Text('Usuario ou Senha Inválidos'),
+                    ),
+                  ),
+                ),
                 RoundedButton(
                     text: "LOGIN",
                     press: () {
@@ -162,7 +176,9 @@ class _LoginBodyState extends State<LoginBody> {
                   padding: const EdgeInsets.all(50),
                   margin: const EdgeInsets.all(50),
                   child: Center(
-                    child: !_isLoading ? const Text ('') : const CircularProgressIndicator(),
+                    child: !_isLoading
+                        ? const Text('')
+                        : const CircularProgressIndicator(),
                   ),
                 ),
               ],
