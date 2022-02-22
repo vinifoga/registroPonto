@@ -9,6 +9,7 @@ import 'package:registroponto/screens/upload_file.dart';
 
 import '../constants.dart';
 import 'alerts.dart';
+import 'employee_list.dart';
 
 Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/registros");
 
@@ -28,7 +29,7 @@ class DashboardHRAnalist extends StatelessWidget {
               children: [
                 IconButton(onPressed: () {
                   Navigator.push(context,
-                  MaterialPageRoute(builder : (context) => ReclaimPunchHR()));
+                  MaterialPageRoute(builder : (context) => const ReclaimPunchHR()));
 
                 }, icon: const Icon(Icons.edit), iconSize: 27,),
                 const Text('Correções', style: TextStyle(fontSize: 24),)
@@ -39,7 +40,9 @@ class DashboardHRAnalist extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Row(
               children: [
-                IconButton(onPressed: () {}, icon: const Icon(Icons.person_outline), iconSize: 27,),
+                IconButton(onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const EmployeeList()));
+                }, icon: const Icon(Icons.person_outline), iconSize: 27,),
                 const Text('Colaboradores', style: TextStyle(fontSize: 24),)
               ],
             ),
