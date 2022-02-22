@@ -48,7 +48,7 @@ class DashboardHRAnalist extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Row(
               children: [
-                IconButton(onPressed: () {}, icon: const Icon(Icons.home_work_sharp), iconSize: 27,),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.apartment), iconSize: 27,),
                 const Text('Unidades', style: TextStyle(fontSize: 24),)
               ],
             ),
