@@ -14,9 +14,10 @@ class ReclaimPunch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarRp(
+      appBar: const AppBarRp(
         appBarTitle: 'Corrigir',
         showImage: true,
+        showBackArrow: true,
       ),
       body: Form(
         child: Padding(

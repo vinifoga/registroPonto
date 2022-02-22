@@ -12,6 +12,7 @@ class MoreOptions extends StatelessWidget {
       appBar: AppBarRp(
         appBarTitle: 'Registro Ponto',
         showImage: true,
+        showBackArrow: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

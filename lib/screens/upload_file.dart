@@ -9,7 +9,7 @@ class UploadFile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarRp(appBarTitle: 'Últimos Enviados', showImage: true,),
+      appBar: const AppBarRp(appBarTitle: 'Últimos Enviados', showImage: true, showBackArrow: true,),
       body: ListView(
           padding: const EdgeInsets.all(16.0),
           children: <Widget>[

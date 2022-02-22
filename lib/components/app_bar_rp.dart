@@ -6,11 +6,12 @@ import '../constants.dart';
 class AppBarRp extends StatelessWidget implements PreferredSizeWidget {
   final String appBarTitle;
   final bool showImage;
+  final bool showBackArrow;
 
   const AppBarRp(
       {Key? key,
       required this.appBarTitle,
-      required this.showImage})
+      required this.showImage, required this.showBackArrow,})
       : super(key: key);
 
   @override
@@ -19,6 +20,7 @@ class AppBarRp extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       toolbarHeight: 88,
       backgroundColor: kPrimaryLightColor,
+      automaticallyImplyLeading: showBackArrow,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

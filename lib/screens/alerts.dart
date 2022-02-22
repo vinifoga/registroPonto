@@ -13,6 +13,7 @@ class Alerts extends StatelessWidget {
       appBar: const AppBarRp(
         appBarTitle: 'Alertas',
         showImage: true,
+        showBackArrow: true,
       ),
       body: ListView(
         padding: EdgeInsets.all(8),

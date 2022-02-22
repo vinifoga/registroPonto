@@ -7,7 +7,7 @@ class Exit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar: AppBarRp(appBarTitle: 'Saída', showImage: true),
+      appBar: AppBarRp(appBarTitle: 'Saída', showImage: true, showBackArrow: true,),
       body: Text('Saída'),
     );
   }

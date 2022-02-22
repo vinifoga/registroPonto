@@ -4,6 +4,7 @@ import 'package:registroponto/components/bottom_app_bar_option.dart';
 import 'package:registroponto/screens/exit.dart';
 import 'package:registroponto/screens/more_options.dart';
 import 'package:registroponto/screens/punch_clocking.dart';
+import 'package:registroponto/screens/reclaim_punch_hr.dart';
 import 'package:registroponto/screens/upload_file.dart';
 
 import '../constants.dart';
@@ -18,111 +19,60 @@ class DashboardHRAnalist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarRp(appBarTitle: 'Responsavel RH', showImage: true),
-      body: ListView(
-        padding: const EdgeInsets.all(8),
-        children: <Widget>[
-          const Card(
-            child: ListTile(
-              title: Text('Entrada'),
-              subtitle: Text('02/09/2021 - 8:00'),
-              trailing: Icon(
-                Icons.call_received,
-                color: Colors.green,
-              ),
-              tileColor: kPrimaryLightColor,
+      appBar: const AppBarRp(appBarTitle: 'Registro Ponto', showImage: true, showBackArrow: false,),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(32.0, 25.0, 32.0, 0.0),
+            child: Row(
+              children: [
+                IconButton(onPressed: () {
+                  Navigator.push(context,
+                  MaterialPageRoute(builder : (context) => ReclaimPunchHR()));
+
+                }, icon: const Icon(Icons.edit), iconSize: 27,),
+                const Text('Correções', style: TextStyle(fontSize: 24),)
+              ],
             ),
           ),
-          Card(
-            child: ListTile(
-              title: Text('Saída'),
-              subtitle: Text('02/09/2021 - 8:00'),
-              trailing: Icon(
-                Icons.call_made,
-                color: Colors.red,
-              ),
-              tileColor: kPrimaryLightColor,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Row(
+              children: [
+                IconButton(onPressed: () {}, icon: const Icon(Icons.person_outline), iconSize: 27,),
+                const Text('Colaboradores', style: TextStyle(fontSize: 24),)
+              ],
             ),
           ),
-          GestureDetector(
-              child: Card(
-                child: ListTile(
-                  title: Text('Ver mais'),
-                  trailing: Icon(
-                    Icons.add,
-                    color: Colors.blue,
-                  ),
-                  tileColor: kPrimaryLightColor,
-                ),
-              ),
-              onTap: () => {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => PunchClocking(),
-                      ),
-                    )
-                  }),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Row(
+              children: [
+                IconButton(onPressed: () {}, icon: const Icon(Icons.home_work_sharp), iconSize: 27,),
+                const Text('Unidades', style: TextStyle(fontSize: 24),)
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Row(
+              children: [
+                IconButton(onPressed: () {}, icon: const Icon(Icons.supervised_user_circle), iconSize: 27,),
+                const Text('Usuarios', style: TextStyle(fontSize: 24),)
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Row(
+              children: [
+                IconButton(onPressed: () {}, icon: const Icon(Icons.exit_to_app), iconSize: 27,),
+                const Text('Sair', style: TextStyle(fontSize: 24),)
+              ],
+            ),
+          ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: floatActionButtonColor,
-        onPressed: () {},
-        child: const Icon(Icons.fingerprint), //icon inside button
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: BottomAppBar(
-        color: titleColor,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 6,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            BottomAppBarOption(
-              icon: Icons.exit_to_app,
-              onClick: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const Exit(),
-                  ),
-                );
-              },
-            ),
-            BottomAppBarOption(
-              icon: Icons.warning,
-              onClick: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const Alerts(),
-                  ),
-                );
-              },
-            ),
-            BottomAppBarOption(
-              icon: Icons.upload_file,
-              onClick: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const UploadFile(),
-                  ),
-                );
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 80.0),
-              child: BottomAppBarOption(
-                icon: Icons.edit,
-                onClick: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const MoreOptions(),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+      )
     );
   }
 }

@@ -23,7 +23,7 @@ class _PunchClockingState extends State<PunchClocking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarRp(appBarTitle: 'Últimas Marcações', showImage: true),
+      appBar: const AppBarRp(appBarTitle: 'Últimas Marcações', showImage: true, showBackArrow: true,),
       body: ListView(
         padding: const EdgeInsets.all(8),
         children: <Widget>[
