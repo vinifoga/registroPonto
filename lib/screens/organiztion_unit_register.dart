@@ -9,14 +9,14 @@ import 'package:registroponto/components/rounded_button.dart';
 import 'package:intl/intl.dart';
 import 'package:registroponto/components/select_type_reclaim_punch.dart';
 
-class EmployeeRegister extends StatefulWidget {
-  EmployeeRegister({Key? key}) : super(key: key);
+class OrganizationUnitRegister extends StatefulWidget {
+  OrganizationUnitRegister({Key? key}) : super(key: key);
 
   @override
-  State<EmployeeRegister> createState() => _EmployeeRegisterState();
+  State<OrganizationUnitRegister> createState() => _OrganizationUnitRegisterState();
 }
 
-class _EmployeeRegisterState extends State<EmployeeRegister> {
+class _OrganizationUnitRegisterState extends State<OrganizationUnitRegister> {
   bool status = false;
   final dateFormat = DateFormat("dd-MM-yyyy");
   final hourFormat = DateFormat("HH:mm");
@@ -24,22 +24,22 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarRp(showBackArrow: true, showImage: false, appBarTitle: 'Colaborador',),
+      appBar: AppBarRp(showBackArrow: true, showImage: false, appBarTitle: 'Unidade',),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Column(
             children: [
-              const InputText(labelText: 'Nome Completo', hintText: 'Digite o nome', keyboardType: TextInputType.text,),
-              const InputText(labelText: 'Email', hintText: 'Digite o e-mail', keyboardType: TextInputType.emailAddress,),
+              const InputText(labelText: 'Descrição', hintText: 'Digite um descrição', keyboardType: TextInputType.text,),
+              const InputText(labelText: 'CNPJ', hintText: 'Digite o CNPJ', keyboardType: TextInputType.number,),
               Padding(
                 padding: const EdgeInsets.fromLTRB (16.0, 0.0, 16.0, 0.0),
                 child: DateTimeField(
                   format: dateFormat,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Data de Admissão',
-                    hintText: 'Digite a data de Admissão'
+                    labelText: 'Data de Abertura',
+                    hintText: 'Digite a data de Abertura da Empresa'
                   ),
                   onShowPicker: (context, currentValue) {
                     return showDatePicker(
@@ -65,9 +65,9 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                   padding: 8.0,
                   showOnOff: true,
                   activeColor: Colors.greenAccent,
-                  activeText: 'Ativo',
+                  activeText: 'Ativa',
                   inactiveColor: Colors.redAccent,
-                  inactiveText: 'Desligado',
+                  inactiveText: 'Inativa',
                   onToggle: (val) {
                     setState(() {
                       status = val;
@@ -80,37 +80,18 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: SelectType(),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 15.0, 16.0, 0.0),
-                child: DateTimeField(
-                  format: dateFormat,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Data Nascimento',
-                      hintText: 'Digite a data de Nascimento'
-                  ),
-                  onShowPicker: (context, currentValue) {
-                    return showDatePicker(
-                        context: context,
-                        fieldLabelText: 'Data',
-                        locale: const Locale('pt'),
-                        firstDate: DateTime(2022),
-                        initialDate: currentValue ?? DateTime.now(),
-                        lastDate: DateTime(2100));
-                  },
-
-                ),
-              ),
-              const InputText(hintText: 'Digite o CPF', labelText: 'CPF', keyboardType: TextInputType.number,),
-              const InputText(hintText: 'Digite o PIS', labelText: 'PIS', keyboardType: TextInputType.number,),
+              const InputText(hintText: 'Digite o nome da Rua', labelText: 'Rua', keyboardType: TextInputType.text,),
+              const InputText(hintText: 'Digite o número', labelText: 'Número', keyboardType: TextInputType.number,),
+              const InputText(hintText: 'Digite o bairro', labelText: 'Bairro', keyboardType: TextInputType.text,),
+              const InputText(hintText: 'Digite a cidade', labelText: 'Cidade', keyboardType: TextInputType.text,),
+              const InputText(hintText: 'Digite o estado', labelText: 'Estado', keyboardType: TextInputType.text,),
               Padding(
                 padding: const EdgeInsets.fromLTRB (16.0, 0.0, 16.0, 0.0),
                 child: DateTimeField(
                   format: hourFormat,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Hora Entrada',
-                      hintText: 'Digite a Hora de Entrada'
+                      labelText: 'Hora Abertura',
                   ),
                   onShowPicker: (context, currentValue) async {
                     final time = await showTimePicker(
@@ -128,7 +109,7 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                   format: hourFormat,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Hora Saída',
+                      labelText: 'Hora Fechamento',
                       hintText: 'Digite a Hora de Entrada'
                   ),
                   onShowPicker: (context, currentValue) async {
@@ -141,7 +122,6 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                   },
                 ),
               ),
-              InputText(hintText: 'Duração', labelText: 'Intervalo', keyboardType: TextInputType.number,),
               RoundedButton(
                   text: "SALVAR",
                   press: () {

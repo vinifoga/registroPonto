@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/components/bottom_app_bar_option.dart';
 import 'package:registroponto/screens/exit.dart';
+import 'package:registroponto/screens/login_screen.dart';
 import 'package:registroponto/screens/more_options.dart';
 import 'package:registroponto/screens/punch_clocking.dart';
 import 'package:registroponto/screens/reclaim_punch_hr.dart';
 import 'package:registroponto/screens/upload_file.dart';
+import 'package:registroponto/screens/user_list.dart';
 
 import '../constants.dart';
 import 'alerts.dart';
 import 'employee_list.dart';
+import 'organization_unit_list.dart';
 
 Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/registros");
 
@@ -51,7 +54,9 @@ class DashboardHRAnalist extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Row(
               children: [
-                IconButton(onPressed: () {}, icon: const Icon(Icons.apartment), iconSize: 27,),
+                IconButton(onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const OrganizationUnitList()));
+                }, icon: const Icon(Icons.apartment), iconSize: 27,),
                 const Text('Unidades', style: TextStyle(fontSize: 24),)
               ],
             ),
@@ -60,7 +65,9 @@ class DashboardHRAnalist extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Row(
               children: [
-                IconButton(onPressed: () {}, icon: const Icon(Icons.supervised_user_circle), iconSize: 27,),
+                IconButton(onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const UserList()));
+                }, icon: const Icon(Icons.supervised_user_circle), iconSize: 27,),
                 const Text('Usuarios', style: TextStyle(fontSize: 24),)
               ],
             ),
@@ -69,7 +76,9 @@ class DashboardHRAnalist extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Row(
               children: [
-                IconButton(onPressed: () {}, icon: const Icon(Icons.exit_to_app), iconSize: 27,),
+                IconButton(onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                }, icon: const Icon(Icons.exit_to_app), iconSize: 27,),
                 const Text('Sair', style: TextStyle(fontSize: 24),)
               ],
             ),
