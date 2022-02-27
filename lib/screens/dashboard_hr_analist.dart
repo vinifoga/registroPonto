@@ -17,7 +17,8 @@ import 'organization_unit_list.dart';
 Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/registros");
 
 class DashboardHRAnalist extends StatelessWidget {
-  const DashboardHRAnalist(String tokenEnvia, {Key? key}) : super(key: key);
+  final String tokenEnvia;
+  const DashboardHRAnalist({Key? key, required this.tokenEnvia}) : super(key: key);
 
 
   @override

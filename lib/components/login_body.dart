@@ -71,6 +71,8 @@ class _LoginBodyState extends State<LoginBody> {
             perfil = 'responsavelRh';
           } else if (role.nomeRole == 'ROLE_COLABORADOR') {
             perfil = 'colaborador';
+          } else if (role.nomeRole == 'ROLE_ADMIN'){
+            perfil = 'admin';
           }
         }
         setState(() {
@@ -81,10 +83,13 @@ class _LoginBodyState extends State<LoginBody> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => DashboardHRAnalist(tokenEnvia)));
+                  builder: (context) => DashboardHRAnalist(tokenEnvia: tokenEnvia,)));
         } else if (perfil == 'colaborador') {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => Dashboard(tokenEnvia)));
+              MaterialPageRoute(builder: (context) => Dashboard(tokenEnvia: tokenEnvia, user: user,)));
+        } else if (perfil == 'admin'){
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => Dashboard(tokenEnvia: tokenEnvia, user: user,)));
         }
       } catch (e) {
         print(e);

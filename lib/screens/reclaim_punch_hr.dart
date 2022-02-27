@@ -54,7 +54,7 @@ class ReclaimPunchHR extends StatelessWidget {
               onTap: () => {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => PunchClocking(),
+                    builder: (context) => PunchClockingScreen(),
                   ),
                 )
               }),

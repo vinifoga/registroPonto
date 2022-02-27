@@ -3,14 +3,14 @@ import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/constants.dart';
 import 'package:registroponto/screens/reclaim_punch.dart';
 
-class PunchClocking extends StatefulWidget {
-  PunchClocking({Key? key}) : super(key: key);
+class PunchClockingScreen extends StatefulWidget {
+  PunchClockingScreen({Key? key}) : super(key: key);
 
   @override
-  State<PunchClocking> createState() => _PunchClockingState();
+  State<PunchClockingScreen> createState() => _PunchClockingScreenState();
 }
 
-class _PunchClockingState extends State<PunchClocking> {
+class _PunchClockingScreenState extends State<PunchClockingScreen> {
   late List<bool> isSelected;
   late int _index = 0;
 
