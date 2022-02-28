@@ -21,7 +21,6 @@ class CardAlertCheckOption extends StatelessWidget {
           onChanged: (bool? value) {},
           value: false,
         ),
-        tileColor: kPrimaryLightColor,
       ),
     );
   }

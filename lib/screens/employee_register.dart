@@ -50,7 +50,6 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                         initialDate: currentValue ?? DateTime.now(),
                         lastDate: DateTime(2100));
                   },
-
                 ),
               ),
               Padding(
@@ -98,7 +97,6 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                         initialDate: currentValue ?? DateTime.now(),
                         lastDate: DateTime(2100));
                   },
-
                 ),
               ),
               const InputText(hintText: 'Digite o CPF', labelText: 'CPF', keyboardType: TextInputType.number,),

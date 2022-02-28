@@ -19,61 +19,63 @@ class ReclaimPunch extends StatelessWidget {
         showImage: true,
         showBackArrow: true,
       ),
-      body: Form(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Colaborador'),
-              TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
+      body: SingleChildScrollView(
+        child: Form(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Colaborador'),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                  ),
                 ),
-              ),
-              const Text('Data'),
-              DateTimeField(
-                format: dateFormat,
-                onShowPicker: (context, currentValue) {
-                  return showDatePicker(
-                      context: context,
-                      fieldLabelText: 'Data',
-                      locale: const Locale('pt'),
-                      firstDate: DateTime(2022),
-                      initialDate: currentValue ?? DateTime.now(),
-                      lastDate: DateTime(2100));
-                },
-              ),
-              const Text('Hora'),
-              DateTimeField(
-                format: hourFormat,
-                onShowPicker: (context, currentValue) async {
-                  final time = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.fromDateTime(
-                        currentValue ?? DateTime.now()),
-                  );
-                  return DateTimeField.convert(time);
-                },
-              ),
-              const Text('Tipo'),
-              const SelectType(),
-              const Text('Descrição'),
-              TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    print('Salvar');
+                const Text('Data'),
+                DateTimeField(
+                  format: dateFormat,
+                  onShowPicker: (context, currentValue) {
+                    return showDatePicker(
+                        context: context,
+                        fieldLabelText: 'Data',
+                        locale: const Locale('pt'),
+                        firstDate: DateTime(2022),
+                        initialDate: currentValue ?? DateTime.now(),
+                        lastDate: DateTime(2100));
                   },
-                  child: const Text('Salvar'),
                 ),
-              )
-            ],
+                const Text('Hora'),
+                DateTimeField(
+                  format: hourFormat,
+                  onShowPicker: (context, currentValue) async {
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.fromDateTime(
+                          currentValue ?? DateTime.now()),
+                    );
+                    return DateTimeField.convert(time);
+                  },
+                ),
+                const Text('Tipo'),
+                const SelectType(),
+                const Text('Descrição'),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      print('Salvar');
+                    },
+                    child: const Text('Salvar'),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

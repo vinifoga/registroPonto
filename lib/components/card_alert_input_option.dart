@@ -12,7 +12,7 @@ class CardAlertInputOption extends StatelessWidget {
       child: Card(
         child: ListTile(
           title: Text(title),
-          subtitle: const TextField(
+          subtitle: TextField(
             keyboardType: TextInputType.number,
             decoration: InputDecoration(),
           ),
