@@ -2,12 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:registroponto/components/input_text.dart';
 import 'package:registroponto/components/rounded_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:registroponto/models/roles.dart';
 import 'package:registroponto/models/user.dart';
 import 'package:registroponto/screens/dashboard.dart';
 import 'package:registroponto/screens/dashboard_hr_analist.dart';
+import 'package:registroponto/screens/forget_password_check.dart';
+import 'package:registroponto/screens/password_recovery_screen.dart';
 
 import '../constants.dart';
 import 'background.dart';
@@ -126,24 +129,25 @@ class _LoginBodyState extends State<LoginBody> {
                   height: size.height * 0.3,
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Seu Email'),
+                  decoration: InputDecoration(
+                      labelText: 'Seu Email',
+                  border:  const OutlineInputBorder(),),
                   validator: (value) =>
                       value!.isEmpty ? 'Email não pode ser vazio' : null,
                   onSaved: (value) => _email = value!,
                 ),
+                SizedBox(
+                  height: 20,
+                ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Senha'),
+                  decoration: InputDecoration(labelText: 'Senha',
+                  border: const OutlineInputBorder(),
+                  suffixIcon: Icon(Icons.remove_red_eye),),
                   obscureText: true,
                   validator: (value) =>
                       value!.isEmpty ? 'Senha não pode ser vazio' : null,
                   onSaved: (value) => _password = value!,
                 ),
-                // RoundedInputField(
-                //   hintText: "Seu Email",
-                //   onChanged: (value) {},
-                //   icon: Icons.person,
-                // ),
-                // RoundedPasswordField(onChanged: (value) {}),
                 Visibility(
                   visible: _showError,
                   child: Container(
@@ -164,19 +168,20 @@ class _LoginBodyState extends State<LoginBody> {
                       validateAndSubmit();
                     },
                     textColor: Colors.white),
-                // ForgetPassword(
-                //   text: "Esqueceu sua senha?",
-                //   press: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) {
-                //           return PasswordRecoveryScreen();
-                //         },
-                //       ),
-                //     );
-                //   },
-                // ),
+                ForgetPassword(
+                  text: "Esqueceu sua senha?",
+                  press: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return PasswordRecoveryScreen();
+                        },
+                      ),
+                    );
+                  },
+                ),
+
                 Container(
                   padding: const EdgeInsets.all(50),
                   margin: const EdgeInsets.all(50),
