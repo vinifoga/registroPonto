@@ -30,6 +30,9 @@ late List<Employee> employees = [];
 Uri urlUnits = Uri.parse("https://registro-ponto-api.herokuapp.com/unidades");
 late List<OrganizationUnit> units = [];
 
+Uri urlUsers = Uri.parse("https://registro-ponto-api.herokuapp.com/usuarios");
+late List<User> users = [];
+
 
 class DashboardHRAnalist extends StatelessWidget {
   final String tokenEnvia;
@@ -99,7 +102,8 @@ class DashboardHRAnalist extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const UserList()));
+                      findUsers();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => UserList(tokenEnvia: tokenEnvia, users: users,)));
                     }, icon: const Icon(Icons.supervised_user_circle), iconSize: 27,),
                     const Text('Usuarios', style: TextStyle(fontSize: 24),)
                   ],
@@ -151,6 +155,23 @@ class DashboardHRAnalist extends StatelessWidget {
             .map((i) => OrganizationUnit.fromJson(i)).toList();
       } else {
         throw Exception('Falha ao buscar Unidades');
+      }
+    } catch (e) {
+
+    }
+  }
+
+  void findUsers() async {
+    try {
+      var response = await http.get(urlUsers, headers: {
+        'Content-type': 'application/json',
+        'Authorization': tokenEnvia
+      });
+      if (response.statusCode == 200) {
+        users = (json.decode(response.body) as List)
+            .map((i) => User.fromJson(i)).toList();
+      } else {
+        throw Exception('Falha ao buscar Usuários');
       }
     } catch (e) {
 
