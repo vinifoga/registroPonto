@@ -86,7 +86,7 @@ class _LoginBodyState extends State<LoginBody> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => DashboardHRAnalist(tokenEnvia: tokenEnvia,)));
+                  builder: (context) => DashboardHRAnalist(tokenEnvia: tokenEnvia,user: user,)));
         } else if (perfil == 'colaborador') {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => Dashboard(tokenEnvia: tokenEnvia, user: user,)));

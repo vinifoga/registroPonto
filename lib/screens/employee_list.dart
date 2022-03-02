@@ -5,6 +5,8 @@ import 'package:registroponto/components/app_bar_rp.dart';
 import '../constants.dart';
 import 'employee_register.dart';
 
+Uri urlColaboradores = Uri.parse("https://registro-ponto-api.herokuapp.com/colaboradores");
+
 class EmployeeList extends StatelessWidget {
   const EmployeeList({Key? key}) : super(key: key);
 
