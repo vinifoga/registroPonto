@@ -5,6 +5,7 @@ import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/components/background.dart';
 import 'package:registroponto/components/bottom_app_bar_option.dart';
 import 'package:registroponto/models/employee.dart';
+import 'package:registroponto/models/organization_unit.dart';
 import 'package:registroponto/models/user.dart';
 import 'package:registroponto/screens/exit.dart';
 import 'package:registroponto/screens/login_screen.dart';
@@ -25,6 +26,10 @@ Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/registros");
 
 Uri urlEmployee = Uri.parse("https://registro-ponto-api.herokuapp.com/colaboradores");
 late List<Employee> employees = [];
+
+Uri urlUnits = Uri.parse("https://registro-ponto-api.herokuapp.com/unidades");
+late List<OrganizationUnit> units = [];
+
 
 class DashboardHRAnalist extends StatelessWidget {
   final String tokenEnvia;
@@ -82,7 +87,8 @@ class DashboardHRAnalist extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const OrganizationUnitList()));
+                      findOrganizationUnits();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => OrganizationUnitList(tokenEnvia: tokenEnvia, units: units,)));
                     }, icon: const Icon(Icons.apartment), iconSize: 27,),
                     const Text('Unidades', style: TextStyle(fontSize: 24),)
                   ],
@@ -128,6 +134,23 @@ class DashboardHRAnalist extends StatelessWidget {
             .map((i) => Employee.fromJson(i)).toList();
       } else {
         throw Exception('Falha ao buscar Colaboradores');
+      }
+    } catch (e) {
+
+    }
+  }
+
+  void findOrganizationUnits() async {
+    try {
+      var response = await http.get(urlUnits, headers: {
+        'Content-type': 'application/json',
+        'Authorization': tokenEnvia
+      });
+      if (response.statusCode == 200) {
+        units = (json.decode(response.body) as List)
+            .map((i) => OrganizationUnit.fromJson(i)).toList();
+      } else {
+        throw Exception('Falha ao buscar Unidades');
       }
     } catch (e) {
 
