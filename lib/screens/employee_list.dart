@@ -48,6 +48,13 @@ class EmployeeList extends StatelessWidget {
             }
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeeRegister()));
+        },
+        backgroundColor: kPrimaryColor,
+        child: Icon(Icons.add),
+      ),
       // body: Padding(
       //   padding: const EdgeInsets.all(8.0),
       //   child: Column(

@@ -44,6 +44,13 @@ class UserList extends StatelessWidget {
             }
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => UserRegister()));
+        },
+        backgroundColor: kPrimaryColor,
+        child: Icon(Icons.add),
+      ),
 /*
       body: ListView(
         padding: const EdgeInsets.all(8),

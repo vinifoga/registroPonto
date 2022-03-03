@@ -45,6 +45,13 @@ class OrganizationUnitList extends StatelessWidget {
             }
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => OrganizationUnitRegister()));
+        },
+        backgroundColor: kPrimaryColor,
+        child: Icon(Icons.add),
+      ),
 
       // body: ListView(
       //   padding: const EdgeInsets.all(8),

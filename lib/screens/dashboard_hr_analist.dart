@@ -34,12 +34,17 @@ Uri urlUsers = Uri.parse("https://registro-ponto-api.herokuapp.com/usuarios");
 late List<User> users = [];
 
 
-class DashboardHRAnalist extends StatelessWidget {
+class DashboardHRAnalist extends StatefulWidget {
   final String tokenEnvia;
   final User user;
   const DashboardHRAnalist({Key? key, required this.tokenEnvia, required this.user}) : super(key: key);
 
+  @override
+  State<DashboardHRAnalist> createState() => _DashboardHRAnalistState();
+}
 
+class _DashboardHRAnalistState extends State<DashboardHRAnalist> {
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,9 +82,8 @@ class DashboardHRAnalist extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 32.0),
                 child: Row(
                   children: [
-                    IconButton(onPressed: () {
+                    IconButton(onPressed: () async{
                       findEmployees();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeeList(tokenEnvia: tokenEnvia, employees: employees)));
                     }, icon: const Icon(Icons.person_outline), iconSize: 27,),
                     const Text('Colaboradores', style: TextStyle(fontSize: 24),)
                   ],
@@ -89,9 +93,8 @@ class DashboardHRAnalist extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 32.0),
                 child: Row(
                   children: [
-                    IconButton(onPressed: () {
+                    IconButton(onPressed: () async{
                       findOrganizationUnits();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => OrganizationUnitList(tokenEnvia: tokenEnvia, units: units,)));
                     }, icon: const Icon(Icons.apartment), iconSize: 27,),
                     const Text('Unidades', style: TextStyle(fontSize: 24),)
                   ],
@@ -101,9 +104,8 @@ class DashboardHRAnalist extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 32.0),
                 child: Row(
                   children: [
-                    IconButton(onPressed: () {
+                    IconButton(onPressed: () async{
                       findUsers();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => UserList(tokenEnvia: tokenEnvia, users: users,)));
                     }, icon: const Icon(Icons.supervised_user_circle), iconSize: 27,),
                     const Text('Usuarios', style: TextStyle(fontSize: 24),)
                   ],
@@ -120,6 +122,15 @@ class DashboardHRAnalist extends StatelessWidget {
                   ],
                 ),
               ),
+              Container(
+                padding: const EdgeInsets.all(50),
+                margin: const EdgeInsets.all(50),
+                child: Center(
+                  child: !_isLoading
+                      ? const Text('')
+                      : const CircularProgressIndicator(),
+                ),
+              ),
             ],
           ),
         ),
@@ -127,11 +138,14 @@ class DashboardHRAnalist extends StatelessWidget {
     );
   }
 
-  void findEmployees() async {
+  Future<void> findEmployees() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       var response = await http.get(urlEmployee, headers: {
         'Content-type': 'application/json',
-        'Authorization': tokenEnvia
+        'Authorization': widget.tokenEnvia
       });
       if (response.statusCode == 200) {
         employees = (json.decode(response.body) as List)
@@ -142,13 +156,20 @@ class DashboardHRAnalist extends StatelessWidget {
     } catch (e) {
 
     }
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeeList(tokenEnvia: widget.tokenEnvia, employees: employees)));
   }
 
   void findOrganizationUnits() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       var response = await http.get(urlUnits, headers: {
         'Content-type': 'application/json',
-        'Authorization': tokenEnvia
+        'Authorization': widget.tokenEnvia
       });
       if (response.statusCode == 200) {
         units = (json.decode(response.body) as List)
@@ -159,13 +180,20 @@ class DashboardHRAnalist extends StatelessWidget {
     } catch (e) {
 
     }
+    Navigator.push(context, MaterialPageRoute(builder: (context) => OrganizationUnitList(tokenEnvia: widget.tokenEnvia, units: units,)));
+    setState(() {
+      _isLoading = false;
+    });
   }
 
-  void findUsers() async {
+  Future<void> findUsers() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       var response = await http.get(urlUsers, headers: {
         'Content-type': 'application/json',
-        'Authorization': tokenEnvia
+        'Authorization': widget.tokenEnvia
       });
       if (response.statusCode == 200) {
         users = (json.decode(response.body) as List)
@@ -176,5 +204,9 @@ class DashboardHRAnalist extends StatelessWidget {
     } catch (e) {
 
     }
+    Navigator.push(context, MaterialPageRoute(builder: (context) => UserList(tokenEnvia: widget.tokenEnvia, users: users,)));
+    setState(() {
+      _isLoading = false;
+    });
   }
 }
