@@ -7,12 +7,16 @@ import 'package:http/http.dart' as http;
 import 'package:registroponto/components/employee_card.dart';
 import 'package:registroponto/models/employee.dart';
 import 'package:registroponto/models/job_title.dart';
+import 'package:registroponto/models/organization_unit.dart';
 
 import '../constants.dart';
 import 'employee_register.dart';
 
 Uri urlJobTitles = Uri.parse("https://registro-ponto-api.herokuapp.com/cargos");
 late List<JobTitle> jobTitles = [];
+
+Uri urlUnits = Uri.parse("https://registro-ponto-api.herokuapp.com/unidades");
+late List<OrganizationUnit> units = [];
 
 class EmployeeList extends StatefulWidget {
   final String tokenEnvia;
@@ -24,7 +28,7 @@ class EmployeeList extends StatefulWidget {
 }
 
 class _EmployeeListState extends State<EmployeeList> {
-  bool _isLoading = false;
+  bool _isLoading = true;
   bool _showError = false;
   List<String> teste = [];
 
@@ -172,10 +176,25 @@ class _EmployeeListState extends State<EmployeeList> {
     } catch (e) {
 
     }
+    try {
+      var response = await http.get(urlUnits, headers: {
+        'Content-type': 'application/json',
+        'Authorization': widget.tokenEnvia
+      });
+      if (response.statusCode == 200) {
+        units = (json.decode(response.body) as List)
+            .map((i) => OrganizationUnit.fromJson(i)).toList();
+
+      } else {
+        throw Exception('Falha ao buscar Unidades');
+      }
+    } catch (e) {
+
+    }
     setState(() {
       _isLoading = true;
     });
-    Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeeRegister(token : widget.tokenEnvia, jobTitles : jobTitles)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeeRegister(token : widget.tokenEnvia, jobTitles : jobTitles, units: units)));
   }
 }
 

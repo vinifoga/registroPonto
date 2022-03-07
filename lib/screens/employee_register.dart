@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:registroponto/components/select_type_reclaim_punch.dart';
 import 'package:registroponto/models/employee.dart';
 import 'package:registroponto/models/job_title.dart';
+import 'package:registroponto/models/organization_unit.dart';
 import 'package:registroponto/screens/employee_list.dart';
 
 Uri urlEmployee = Uri.parse("https://registro-ponto-api.herokuapp.com/colaboradores");
@@ -21,7 +22,8 @@ late List<Employee> users = [];
 class EmployeeRegister extends StatefulWidget {
   final String token;
   final List<JobTitle> jobTitles;
-  const EmployeeRegister({Key? key, required this.token, required this.jobTitles}) : super(key: key);
+  final List<OrganizationUnit> units;
+  const EmployeeRegister({Key? key, required this.token, required this.jobTitles, required this.units}) : super(key: key);
 
   @override
   State<EmployeeRegister> createState() => _EmployeeRegisterState();
@@ -111,6 +113,10 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                           lastDate: DateTime(2100));
                     },
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                  child: SelectType(list: units.map((e) => e.descricao.toString()).toList()),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(32.0),
