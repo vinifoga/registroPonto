@@ -10,7 +10,9 @@ import 'package:intl/intl.dart';
 import 'package:registroponto/components/select_type_reclaim_punch.dart';
 
 class UserRegister extends StatefulWidget {
-  UserRegister({Key? key}) : super(key: key);
+  final String token;
+
+  UserRegister({Key? key, required this.token}) : super(key: key);
 
   @override
   State<UserRegister> createState() => _UserRegisterState();

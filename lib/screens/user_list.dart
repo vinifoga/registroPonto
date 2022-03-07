@@ -46,7 +46,7 @@ class UserList extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => UserRegister()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => UserRegister(token: tokenEnvia)));
         },
         backgroundColor: kPrimaryColor,
         child: Icon(Icons.add),
