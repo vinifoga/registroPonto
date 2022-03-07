@@ -5,11 +5,13 @@ class InputText extends StatelessWidget {
   final String labelText;
   final Icon? icon;
   final TextInputType? keyboardType;
+  final TextEditingController controller;
 
   const InputText({
     Key? key,
     required this.hintText,
     required this.labelText,
+    required this.controller,
     this.icon,
     this.keyboardType,
   }) : super(key: key);
@@ -19,6 +21,7 @@ class InputText extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
           hintText: hintText,

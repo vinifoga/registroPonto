@@ -9,9 +9,10 @@ import 'forget_password_check.dart';
 import 'login_screen.dart';
 
 class PasswordRecoveryScreen extends StatelessWidget {
-  const PasswordRecoveryScreen({
+  PasswordRecoveryScreen({
     Key? key,
   }) : super(key: key);
+  final mailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class PasswordRecoveryScreen extends StatelessWidget {
                     image: AssetImage("assets/images/password_recovery.png"),
                     height: size.height * 0.3,
                   ),
-                  InputText(hintText: 'Email',labelText: 'Email',),
+                  InputText(hintText: 'Email',labelText: 'Email', controller: mailController,),
                   Text('Vamos enviar um email com instruções para redefinir sua senha!',style: GoogleFonts.robotoCondensed(
                       fontSize: 20, color: titleColor,), textAlign: TextAlign.center,),
                   RoundedButton(

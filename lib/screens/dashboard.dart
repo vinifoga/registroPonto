@@ -3,19 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
-import 'package:registroponto/components/bottom_app_bar_option.dart';
 import 'package:registroponto/models/punch_clocking.dart';
 import 'package:registroponto/models/sort_pageable_punch_clocking.dart';
 import 'package:registroponto/models/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:registroponto/screens/exit.dart';
 import 'package:registroponto/screens/login_screen.dart';
-import 'package:registroponto/screens/more_options.dart';
 import 'package:registroponto/screens/punch_clocking.dart';
-import 'package:registroponto/screens/reclaim_punch.dart';
-import 'package:registroponto/screens/reclaim_punch_hr.dart';
 import 'package:registroponto/screens/sick_note.dart';
-import 'package:registroponto/screens/upload_file.dart';
 
 import '../constants.dart';
 import 'alerts.dart';
@@ -49,7 +43,7 @@ class Dashboard extends StatelessWidget {
         throw Exception('Falha ao buscar Registros');
       }
     } catch (e) {
-
+      ('Falha ao buscar Registros');
     }
   }
 
@@ -70,7 +64,7 @@ class Dashboard extends StatelessWidget {
                   + punchs[3].data.toString().substring(5, 7) + '/'
                   + punchs[3].data.toString().substring(0, 4) + '    '
                   + punchs[3].hora.toString()),
-              trailing: Icon(
+              trailing: const Icon(
                 Icons.call_received,
                 color: Colors.green,
               ),
@@ -84,7 +78,7 @@ class Dashboard extends StatelessWidget {
                   + punchs[2].data.toString().substring(5, 7) + '/'
                   + punchs[2].data.toString().substring(0, 4) + '   '
                   + punchs[2].hora.toString()),
-              trailing: Icon(
+              trailing: const Icon(
                 Icons.call_made,
                 color: Colors.red,
               ),
@@ -97,7 +91,7 @@ class Dashboard extends StatelessWidget {
                   + punchs[1].data.toString().substring(5, 7) + '/'
                   + punchs[1].data.toString().substring(0, 4) + '    '
                   + punchs[1].hora.toString()),
-              trailing: Icon(
+              trailing: const Icon(
                 Icons.call_received,
                 color: Colors.green,
               ),
@@ -110,7 +104,7 @@ class Dashboard extends StatelessWidget {
                   + punchs[0].data.toString().substring(5, 7) + '/'
                   + punchs[0].data.toString().substring(0, 4) + '    '
                   + punchs[0].hora.toString()),
-              trailing: Icon(
+              trailing: const Icon(
                 Icons.call_made,
                 color: Colors.red,
               ),
@@ -119,7 +113,7 @@ class Dashboard extends StatelessWidget {
           ),
 
           GestureDetector(
-              child: Card(
+              child: const Card(
                 child: ListTile(
                   title: Text('Ver mais'),
                   trailing: Icon(
@@ -166,7 +160,7 @@ class Dashboard extends StatelessWidget {
                 children: [
                   IconButton(onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder : (context) => const Alerts()));
+                        MaterialPageRoute(builder : (context) => Alerts()));
 
                   }, icon: const Icon(Icons.warning), iconSize: 27,),
                   const Text('Alertas', style: TextStyle(fontSize: 24),)

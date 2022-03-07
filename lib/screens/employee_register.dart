@@ -1,15 +1,13 @@
-import 'dart:convert';
 
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/Picker.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/components/input_text.dart';
-import 'package:registroponto/components/personalized_duration_picker.dart';
-import 'package:http/http.dart' as http;
 import 'package:registroponto/components/rounded_button.dart';
-import 'package:intl/intl.dart';
 import 'package:registroponto/components/select_type_reclaim_punch.dart';
 import 'package:registroponto/models/employee.dart';
 import 'package:registroponto/models/job_title.dart';
@@ -36,7 +34,17 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
   final hourFormat = DateFormat("HH:mm");
   bool _isLoading = false;
   bool _showError = false;
-  List<String> teste = ['123', '456', '897'];
+
+  final nameController = TextEditingController();
+  final mailController = TextEditingController();
+  final admissionDateController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final birthDateController = TextEditingController();
+  final cpfController = TextEditingController();
+  final pisController = TextEditingController();
+  final startWorkController = TextEditingController();
+  final endWorkController = TextEditingController();
+  final breakTimeController = TextEditingController();
 
   bool validateAndSave() {
     final form = formKey.currentState;
@@ -66,19 +74,12 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
         });
 
       } catch (e) {
-        print(e);
         setState(() {
           _isLoading = false;
           _showError = true;
         });
       }
     }
-  }
-
-
-  @override
-  void initState() {
-    print(jobTitles);
   }
 
   @override
@@ -92,11 +93,12 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
             key: formKey,
             child: Column(
               children: [
-                const InputText(labelText: 'Nome Completo', hintText: 'Digite o nome', keyboardType: TextInputType.text,),
-                const InputText(labelText: 'Email', hintText: 'Digite o e-mail', keyboardType: TextInputType.emailAddress,),
+                InputText(labelText: 'Nome Completo', hintText: 'Digite o nome', keyboardType: TextInputType.text, controller: nameController,),
+                InputText(labelText: 'Email', hintText: 'Digite o e-mail', keyboardType: TextInputType.emailAddress, controller: mailController, ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB (16.0, 0.0, 16.0, 0.0),
                   child: DateTimeField(
+                    controller: admissionDateController,
                     format: dateFormat,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -115,7 +117,7 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
                   child: SelectType(list: units.map((e) => e.descricao.toString()).toList()),
                 ),
                 Padding(
@@ -140,14 +142,15 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                     },
                   ),
                 ),
-                const InputText(hintText: '(11) 99999-9999', labelText: 'Telefone', keyboardType: TextInputType.phone,),
+                InputText(hintText: '(11) 99999-9999', labelText: 'Telefone', keyboardType: TextInputType.phone, controller: phoneNumberController,),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: SelectType(list: jobTitles.map((e) => e.descricao.toString()).toList()),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 15.0, 16.0, 0.0),
                   child: DateTimeField(
+                    controller: birthDateController,
                     format: dateFormat,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -165,11 +168,12 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                     },
                   ),
                 ),
-                const InputText(hintText: 'Digite o CPF', labelText: 'CPF', keyboardType: TextInputType.number,),
-                const InputText(hintText: 'Digite o PIS', labelText: 'PIS', keyboardType: TextInputType.number,),
+                InputText(hintText: 'Digite o CPF', labelText: 'CPF', keyboardType: TextInputType.number, controller: cpfController,),
+                InputText(hintText: 'Digite o PIS', labelText: 'PIS', keyboardType: TextInputType.number, controller: pisController),
                 Padding(
                   padding: const EdgeInsets.fromLTRB (16.0, 0.0, 16.0, 0.0),
                   child: DateTimeField(
+                    controller: startWorkController,
                     format: hourFormat,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -189,6 +193,7 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB (16.0, 15.0, 16.0, 0.0),
                   child: DateTimeField(
+                    controller: endWorkController,
                     format: hourFormat,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -205,7 +210,7 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                     },
                   ),
                 ),
-                InputText(hintText: 'Duração', labelText: 'Intervalo', keyboardType: TextInputType.number,),
+                InputText(hintText: 'Duração', labelText: 'Intervalo', keyboardType: TextInputType.number, controller: breakTimeController,),
                 RoundedButton(
                     text: "SALVAR",
                     press: () {

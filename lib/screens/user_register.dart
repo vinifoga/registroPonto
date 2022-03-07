@@ -1,13 +1,10 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/Picker.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:intl/intl.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/components/input_text.dart';
-import 'package:registroponto/components/personalized_duration_picker.dart';
 import 'package:registroponto/components/rounded_button.dart';
-import 'package:intl/intl.dart';
-import 'package:registroponto/components/select_type_reclaim_punch.dart';
 
 class UserRegister extends StatefulWidget {
   final String token;
@@ -23,10 +20,14 @@ class _UserRegisterState extends State<UserRegister> {
   final dateFormat = DateFormat("dd-MM-yyyy");
   final hourFormat = DateFormat("HH:mm");
 
+  final nameController = TextEditingController();
+  final mailController = TextEditingController();
+  final defaultPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarRp(
+      appBar: const AppBarRp(
         showBackArrow: true,
         showImage: false,
         appBarTitle: 'Usuário',
@@ -36,20 +37,23 @@ class _UserRegisterState extends State<UserRegister> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Column(
             children: [
-              const InputText(
+              InputText(
                 labelText: 'Nome Completo',
                 hintText: 'Digite o nome',
                 keyboardType: TextInputType.text,
+                controller: nameController,
               ),
-              const InputText(
+              InputText(
                 labelText: 'Email',
                 hintText: 'Digite o e-mail',
                 keyboardType: TextInputType.emailAddress,
+                controller: mailController,
               ),
-              const InputText(
+              InputText(
                 labelText: 'Senha Padrão',
                 hintText: 'Digite uma senha',
                 keyboardType: TextInputType.text,
+                controller: defaultPasswordController,
               ),
               Padding(
                 padding: const EdgeInsets.all(32.0),
@@ -102,9 +106,9 @@ test(BuildContext context) {
     hideHeader: true,
     confirmText: 'OK',
     confirmTextStyle:
-        TextStyle(inherit: false, color: Colors.red, fontSize: 22),
+        const TextStyle(inherit: false, color: Colors.red, fontSize: 22),
     title: const Text('Select duration'),
-    selectedTextStyle: TextStyle(color: Colors.blue),
+    selectedTextStyle: const TextStyle(color: Colors.blue),
     onConfirm: (Picker picker, List<int> value) {
       // You get your duration here
       Duration _duration = Duration(

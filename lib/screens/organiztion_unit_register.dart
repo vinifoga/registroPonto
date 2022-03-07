@@ -2,11 +2,10 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/Picker.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:intl/intl.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/components/input_text.dart';
-import 'package:registroponto/components/personalized_duration_picker.dart';
 import 'package:registroponto/components/rounded_button.dart';
-import 'package:intl/intl.dart';
 import 'package:registroponto/components/select_type_reclaim_punch.dart';
 
 class OrganizationUnitRegister extends StatefulWidget {
@@ -20,22 +19,34 @@ class _OrganizationUnitRegisterState extends State<OrganizationUnitRegister> {
   bool status = false;
   final dateFormat = DateFormat("dd-MM-yyyy");
   final hourFormat = DateFormat("HH:mm");
-  List<String> teste = ['123', '456', '897'];
+
+  final descriptionController = TextEditingController();
+  final cnpjController = TextEditingController();
+  final openingDateContoller = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final streetController = TextEditingController();
+  final numberController = TextEditingController();
+  final districtControlelr = TextEditingController();
+  final cityController = TextEditingController();
+  final stateController = TextEditingController();
+  final openTimeController = TextEditingController();
+  final closeTimeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarRp(showBackArrow: true, showImage: false, appBarTitle: 'Unidade',),
+      appBar: const AppBarRp(showBackArrow: true, showImage: false, appBarTitle: 'Unidade',),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Column(
             children: [
-              const InputText(labelText: 'Descrição', hintText: 'Digite um descrição', keyboardType: TextInputType.text,),
-              const InputText(labelText: 'CNPJ', hintText: 'Digite o CNPJ', keyboardType: TextInputType.number,),
+              InputText(labelText: 'Descrição', hintText: 'Digite um descrição', keyboardType: TextInputType.text, controller: descriptionController,),
+              InputText(labelText: 'CNPJ', hintText: 'Digite o CNPJ', keyboardType: TextInputType.number, controller: cnpjController,),
               Padding(
                 padding: const EdgeInsets.fromLTRB (16.0, 0.0, 16.0, 0.0),
                 child: DateTimeField(
+                  controller: openingDateContoller,
                   format: dateFormat,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
@@ -76,19 +87,20 @@ class _OrganizationUnitRegisterState extends State<OrganizationUnitRegister> {
                   },
                 ),
               ),
-              const InputText(hintText: '(11) 99999-9999', labelText: 'Telefone', keyboardType: TextInputType.phone,),
-              Padding(
+              InputText(hintText: '(11) 99999-9999', labelText: 'Telefone', keyboardType: TextInputType.phone,controller: phoneNumberController,),
+              const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: SelectType(list: teste),
+                child: SelectType(list: []),
               ),
-              const InputText(hintText: 'Digite o nome da Rua', labelText: 'Rua', keyboardType: TextInputType.text,),
-              const InputText(hintText: 'Digite o número', labelText: 'Número', keyboardType: TextInputType.number,),
-              const InputText(hintText: 'Digite o bairro', labelText: 'Bairro', keyboardType: TextInputType.text,),
-              const InputText(hintText: 'Digite a cidade', labelText: 'Cidade', keyboardType: TextInputType.text,),
-              const InputText(hintText: 'Digite o estado', labelText: 'Estado', keyboardType: TextInputType.text,),
+              InputText(hintText: 'Digite o nome da Rua', labelText: 'Rua', keyboardType: TextInputType.text, controller: streetController,),
+              InputText(hintText: 'Digite o número', labelText: 'Número', keyboardType: TextInputType.number, controller: numberController,),
+              InputText(hintText: 'Digite o bairro', labelText: 'Bairro', keyboardType: TextInputType.text, controller: districtControlelr,),
+              InputText(hintText: 'Digite a cidade', labelText: 'Cidade', keyboardType: TextInputType.text, controller: cityController,),
+              InputText(hintText: 'Digite o estado', labelText: 'Estado', keyboardType: TextInputType.text, controller: stateController,),
               Padding(
                 padding: const EdgeInsets.fromLTRB (16.0, 0.0, 16.0, 0.0),
                 child: DateTimeField(
+                  controller: openTimeController,
                   format: hourFormat,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -107,6 +119,7 @@ class _OrganizationUnitRegisterState extends State<OrganizationUnitRegister> {
               Padding(
                 padding: const EdgeInsets.fromLTRB (16.0, 15.0, 16.0, 0.0),
                 child: DateTimeField(
+                  controller: closeTimeController,
                   format: hourFormat,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -148,15 +161,15 @@ test(BuildContext context) {
         child: Container(
           width: 30.0,
           alignment: Alignment.center,
-          child: Icon(Icons.more_vert),
+          child: const Icon(Icons.more_vert),
         ),
       )
     ],
     hideHeader: true,
     confirmText: 'OK',
-    confirmTextStyle: TextStyle(inherit: false, color: Colors.red, fontSize: 22),
+    confirmTextStyle: const TextStyle(inherit: false, color: Colors.red, fontSize: 22),
     title: const Text('Select duration'),
-    selectedTextStyle: TextStyle(color: Colors.blue),
+    selectedTextStyle: const TextStyle(color: Colors.blue),
     onConfirm: (Picker picker, List<int> value) {
       // You get your duration here
       Duration _duration = Duration(hours: picker.getSelectedValues()[0], minutes: picker.getSelectedValues()[1]);
