@@ -9,7 +9,8 @@ import 'package:registroponto/components/select_type_reclaim_punch.dart';
 
 
 class Balance extends StatelessWidget {
-  const Balance({Key? key}) : super(key: key);
+  Balance({Key? key}) : super(key: key);
+  List<String> teste = ['123', '456', '897'];
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,7 @@ class Balance extends StatelessWidget {
             InputText(hintText: 'Duração', labelText: 'Intervalo', keyboardType: TextInputType.number,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: const SelectType(),
+              child: SelectType(list: teste,),
             ),
             InputText(hintText: 'Outro', labelText: 'Outro', keyboardType: TextInputType.text,),
 

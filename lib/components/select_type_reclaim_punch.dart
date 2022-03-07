@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:registroponto/constants.dart';
 
 class SelectType extends StatefulWidget {
-  const SelectType({Key? key}) : super(key: key);
+  final List<String> list;
+  const SelectType({Key? key, required this.list}) : super(key: key);
 
   @override
   State<SelectType> createState() => _MyStatefulWidgetState();
 }
 
 class _MyStatefulWidgetState extends State<SelectType> {
-  String dropdownValue = 'Entrada';
+  late List<String> list = widget.list;
+  late String dropdownValue = list.first;
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +43,7 @@ class _MyStatefulWidgetState extends State<SelectType> {
                       dropdownValue = newValue!;
                     });
                   },
-                  items: <String>[
-                    'Entrada',
-                    'Saida',
-                    'Saida Intervalo',
-                    'Retorno Intervalo',
-                    'Outro'
-                  ].map<DropdownMenuItem<String>>((String value) {
+                  items: list.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),

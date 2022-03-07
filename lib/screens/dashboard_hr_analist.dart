@@ -5,6 +5,7 @@ import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/components/background.dart';
 import 'package:registroponto/components/bottom_app_bar_option.dart';
 import 'package:registroponto/models/employee.dart';
+import 'package:registroponto/models/job_title.dart';
 import 'package:registroponto/models/organization_unit.dart';
 import 'package:registroponto/models/user.dart';
 import 'package:registroponto/screens/exit.dart';
@@ -32,7 +33,6 @@ late List<OrganizationUnit> units = [];
 
 Uri urlUsers = Uri.parse("https://registro-ponto-api.herokuapp.com/usuarios");
 late List<User> users = [];
-
 
 class DashboardHRAnalist extends StatefulWidget {
   final String tokenEnvia;

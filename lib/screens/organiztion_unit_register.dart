@@ -20,6 +20,7 @@ class _OrganizationUnitRegisterState extends State<OrganizationUnitRegister> {
   bool status = false;
   final dateFormat = DateFormat("dd-MM-yyyy");
   final hourFormat = DateFormat("HH:mm");
+  List<String> teste = ['123', '456', '897'];
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +77,9 @@ class _OrganizationUnitRegisterState extends State<OrganizationUnitRegister> {
                 ),
               ),
               const InputText(hintText: '(11) 99999-9999', labelText: 'Telefone', keyboardType: TextInputType.phone,),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: SelectType(),
+                child: SelectType(list: teste),
               ),
               const InputText(hintText: 'Digite o nome da Rua', labelText: 'Rua', keyboardType: TextInputType.text,),
               const InputText(hintText: 'Digite o número', labelText: 'Número', keyboardType: TextInputType.number,),

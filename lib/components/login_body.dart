@@ -31,6 +31,18 @@ class _LoginBodyState extends State<LoginBody> {
   late String _password = '';
   bool _isLoading = false;
   bool _showError = false;
+  bool obscurePassword = true;
+  Color colorShowPassword = Colors.grey;
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  void showPassword(){
+    setState(() {
+      colorShowPassword==Colors.grey ? colorShowPassword=kPrimaryColor : colorShowPassword=Colors.grey;
+      obscurePassword ? obscurePassword=false : obscurePassword=true;
+    });
+  }
 
   bool validateAndSave() {
     final form = formKey.currentState;
@@ -140,10 +152,15 @@ class _LoginBodyState extends State<LoginBody> {
                   height: 20,
                 ),
                 TextFormField(
+                  controller: passwordController,
                   decoration: InputDecoration(labelText: 'Senha',
                   border: const OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.remove_red_eye),),
-                  obscureText: true,
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        showPassword();
+                      },
+                      icon: Icon(Icons.remove_red_eye), color: colorShowPassword,), ),
+                  obscureText: obscurePassword,
                   validator: (value) =>
                       value!.isEmpty ? 'Senha não pode ser vazio' : null,
                   onSaved: (value) => _password = value!,

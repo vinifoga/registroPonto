@@ -58,7 +58,7 @@ class ReclaimPunch extends StatelessWidget {
                   },
                 ),
                 const Text('Tipo'),
-                const SelectType(),
+                SelectType(list: [],),
                 const Text('Descrição'),
                 TextFormField(
                   decoration: const InputDecoration(
