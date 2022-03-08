@@ -9,6 +9,7 @@ import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/components/input_text.dart';
 import 'package:registroponto/components/rounded_button.dart';
 import 'package:registroponto/components/select_type_reclaim_punch.dart';
+import 'package:registroponto/models/department.dart';
 import 'package:registroponto/models/employee.dart';
 import 'package:registroponto/models/job_title.dart';
 import 'package:registroponto/models/organization_unit.dart';
@@ -46,8 +47,20 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
   final endWorkController = TextEditingController();
   final breakTimeController = TextEditingController();
 
+  late final jobTitleKey = GlobalKey();
+  late List<String> list = jobTitles.map((e) => e.descricao.toString()).toList();
+  late String dropdownValueJobTitle = list.first;
+
+  late List<String> unitsList = units.map((e) => e.descricao.toString()).toList();
+  late String dropdownValueUnit = unitsList.first;
+
   bool validateAndSave() {
     final form = formKey.currentState;
+    final jobTitle = jobTitles.firstWhere((element) => element.descricao == dropdownValueJobTitle);
+    final unit = units.firstWhere((element) => element.descricao == dropdownValueUnit);
+
+
+
     if (form!.validate()) {
       form.save();
       return true;
@@ -118,7 +131,47 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-                  child: SelectType(list: units.map((e) => e.descricao.toString()).toList()),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: DropdownButton<String>(
+                                value: dropdownValueUnit,
+                                icon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                ),
+                                elevation: 16,
+                                style: const TextStyle(color: Colors.black),
+                                isExpanded: true,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownValueUnit = newValue!;
+                                  });
+                                },
+                                items: unitsList.map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(32.0),
@@ -145,7 +198,47 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                 InputText(hintText: '(11) 99999-9999', labelText: 'Telefone', keyboardType: TextInputType.phone, controller: phoneNumberController,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: SelectType(list: jobTitles.map((e) => e.descricao.toString()).toList()),
+                  child:  SizedBox(
+                      width: double.infinity,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: DropdownButton<String>(
+                                  value: dropdownValueJobTitle,
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down,
+                                  ),
+                                  elevation: 16,
+                                  style: const TextStyle(color: Colors.black),
+                                  isExpanded: true,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      dropdownValueJobTitle = newValue!;
+                                    });
+                                  },
+                                  items: list.map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 15.0, 16.0, 0.0),

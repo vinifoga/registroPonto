@@ -11,7 +11,7 @@ class JobTitle{
   late final cbo;
   late final Department departamento;
 
-  JobTitle({required this.id, required this.descricao, required this.cbo, required this.departamento});
+  JobTitle({this.id, required this.descricao, required this.cbo, required this.departamento});
 
   factory JobTitle.fromJson(Map<String, dynamic> json) => _$JobTitleFromJson(json);
 
