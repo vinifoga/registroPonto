@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/Picker.dart';
@@ -31,8 +33,8 @@ class EmployeeRegister extends StatefulWidget {
 class _EmployeeRegisterState extends State<EmployeeRegister> {
   final formKey = GlobalKey<FormState>();
   bool status = false;
-  final dateFormat = DateFormat("dd-MM-yyyy");
-  final hourFormat = DateFormat("HH:mm");
+  final dateFormat = DateFormat("yyyy-MM-dd");
+  final hourFormat = DateFormat("HH:mm:ss");
   bool _isLoading = false;
   bool _showError = false;
 
@@ -48,8 +50,8 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
   final breakTimeController = TextEditingController();
 
   late final jobTitleKey = GlobalKey();
-  late List<String> list = jobTitles.map((e) => e.descricao.toString()).toList();
-  late String dropdownValueJobTitle = list.first;
+  late List<String> jobTitlelist = jobTitles.map((e) => e.descricao.toString()).toList();
+  late String dropdownValueJobTitle = jobTitlelist.first;
 
   late List<String> unitsList = units.map((e) => e.descricao.toString()).toList();
   late String dropdownValueUnit = unitsList.first;
@@ -75,12 +77,44 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
         _showError = false;
       });
       try {
+        JobTitle jobTitleChoose = jobTitles.where((jobTitle) => jobTitle.descricao == dropdownValueJobTitle).first;
+        OrganizationUnit unitChoose = units.where((unit) => unit.descricao == dropdownValueUnit).first;
 
-        var responseUser = await http.post(urlEmployee, headers: {
+        Map<String, String> header = {
           'Content-type': 'application/json',
-          'Authorization': widget.token,
-        },
-        body: '');
+          'Authorization': widget.token
+        };
+
+        final body = jsonEncode({
+          "email": mailController.text,
+          "nome": nameController.text,
+          "dataNascimento": birthDateController.text,
+          "ativo": status,
+          "telefone": phoneNumberController.text,
+          "cargoId": jobTitleChoose.id,
+          "dataAdmissao": admissionDateController.text,
+          "cpf": cpfController.text,
+          "pis": pisController.text,
+          "horaEntra": startWorkController.text,
+          "horaSai": endWorkController.text,
+          "intervaloTempo": breakTimeController.text,
+          "trabalhaTodosSabados": false,
+          "trabalhaSabadosAlternados": true,
+          "homeOffice": false,
+          "horaEntraSabado": "08:00:00",
+          "horaSaiSabado": "12:00:00",
+          "unidadeOrganizacionalId": unitChoose.codUnidade
+        });
+
+        var responseUser = await http.post(urlEmployee,
+            headers: header,
+            body: body);
+        if(responseUser.statusCode == 201){
+          Navigator.pop(context);
+        } else {
+          print(responseUser.statusCode);
+          print('Erro ao cadastrar Colaborador');
+        }
 
         setState(() {
           _isLoading = false;
@@ -226,7 +260,7 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                                       dropdownValueJobTitle = newValue!;
                                     });
                                   },
-                                  items: list.map<DropdownMenuItem<String>>((String value) {
+                                  items: jobTitlelist.map<DropdownMenuItem<String>>((String value) {
                                     return DropdownMenuItem<String>(
                                       value: value,
                                       child: Text(value),
@@ -255,7 +289,7 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                           context: context,
                           fieldLabelText: 'Data',
                           locale: const Locale('pt'),
-                          firstDate: DateTime(2022),
+                          firstDate: DateTime(1900),
                           initialDate: currentValue ?? DateTime.now(),
                           lastDate: DateTime(2100));
                     },
@@ -303,7 +337,26 @@ class _EmployeeRegisterState extends State<EmployeeRegister> {
                     },
                   ),
                 ),
-                InputText(hintText: 'Duração', labelText: 'Intervalo', keyboardType: TextInputType.number, controller: breakTimeController,),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB (16.0, 15.0, 16.0, 0.0),
+                  child: DateTimeField(
+                    controller: breakTimeController,
+                    format: hourFormat,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Intervalo',
+                        hintText: 'Digite o tempo de intervalo'
+                    ),
+                    onShowPicker: (context, currentValue) async {
+                      final time = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.fromDateTime(
+                            currentValue ?? DateTime.now()),
+                      );
+                      return DateTimeField.convert(time);
+                    },
+                  ),
+                ),
                 RoundedButton(
                     text: "SALVAR",
                     press: () {

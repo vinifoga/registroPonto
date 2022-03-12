@@ -20,7 +20,7 @@ class InputText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
@@ -29,6 +29,8 @@ class InputText extends StatelessWidget {
           suffixIcon: icon,
         ),
         keyboardType: keyboardType,
+        validator: (value) =>
+        value!.isEmpty ? 'Não pode ser vazio' : null,
       ),
     );
   }

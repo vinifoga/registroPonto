@@ -35,7 +35,7 @@ class _EmployeeListState extends State<EmployeeList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarRp(
+      appBar: const AppBarRp(
         showBackArrow: true, appBarTitle: 'Colaboradores', showImage: false,),
       body: SingleChildScrollView(
         child: Column(
