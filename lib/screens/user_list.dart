@@ -1,16 +1,25 @@
 
 import 'package:flutter/material.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
+import 'package:registroponto/models/employee.dart';
+import 'package:registroponto/models/roles.dart';
 import 'package:registroponto/models/user.dart';
 import 'package:registroponto/screens/user_register.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 import '../constants.dart';
 import 'employee_register.dart';
 
+Uri urlRoles = Uri.parse("https://registro-ponto-api.herokuapp.com/roles");
+late List<Roles> roles = [];
+
 class UserList extends StatelessWidget {
   final String tokenEnvia;
   final List<User> users;
-  UserList({Key? key, required this.tokenEnvia, required this.users}) : super(key: key);
+  final List<Employee> employees;
+  UserList({Key? key, required this.tokenEnvia, required this.users, required this.employees}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +54,8 @@ class UserList extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => UserRegister(token: tokenEnvia)));
+        onPressed: () async{
+          await createUser(context);
         },
         backgroundColor: kPrimaryColor,
         child: Icon(Icons.add),
@@ -93,6 +102,25 @@ class UserList extends StatelessWidget {
       ),
 */
     );
+  }
+
+  Future<void> createUser(BuildContext context) async{
+    try {
+      var response = await http.get(urlRoles, headers: {
+        'Content-type': 'application/json',
+        'Authorization': tokenEnvia
+      });
+      if (response.statusCode == 200) {
+        roles = (json.decode(response.body) as List)
+            .map((i) => Roles.fromJson(i)).toList();
+      } else {
+        throw Exception('Falha ao buscar Roles');
+      }
+    } catch (e) {
+
+    }
+    Navigator.push(context, MaterialPageRoute(builder: (context) => UserRegister(token: tokenEnvia, employees: employees, roles : roles)));
+
   }
 }
 

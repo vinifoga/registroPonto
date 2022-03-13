@@ -191,6 +191,23 @@ class _DashboardHRAnalistState extends State<DashboardHRAnalist> {
       _isLoading = true;
     });
     try {
+      var response = await http.get(urlEmployee, headers: {
+        'Content-type': 'application/json',
+        'Authorization': widget.tokenEnvia
+      });
+      if (response.statusCode == 200) {
+        employees = (json.decode(response.body) as List)
+            .map((i) => Employee.fromJson(i)).toList();
+      } else {
+        throw Exception('Falha ao buscar Colaboradores');
+      }
+    } catch (e) {
+
+    }
+    setState(() {
+      _isLoading = false;
+    });
+    try {
       var response = await http.get(urlUsers, headers: {
         'Content-type': 'application/json',
         'Authorization': widget.tokenEnvia
@@ -204,7 +221,7 @@ class _DashboardHRAnalistState extends State<DashboardHRAnalist> {
     } catch (e) {
 
     }
-    Navigator.push(context, MaterialPageRoute(builder: (context) => UserList(tokenEnvia: widget.tokenEnvia, users: users,)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => UserList(tokenEnvia: widget.tokenEnvia, users: users, employees: employees)));
     setState(() {
       _isLoading = false;
     });
