@@ -9,46 +9,63 @@ import 'package:registroponto/components/input_text.dart';
 import 'package:registroponto/components/rounded_button.dart';
 import 'package:registroponto/models/employee.dart';
 import 'package:registroponto/models/roles.dart';
+import 'package:registroponto/models/user.dart';
 import 'package:registroponto/screens/dashboard_hr_analist.dart';
 import 'package:registroponto/screens/user_list.dart';
 import 'package:http/http.dart' as http;
 
 Uri urlUsers = Uri.parse("https://registro-ponto-api.herokuapp.com/usuarios");
 
-class UserRegister extends StatefulWidget {
+class UserUpdate extends StatefulWidget {
   final String token;
   final List<Employee> employees;
   final List<Roles> roles;
+  final User user;
 
-  const UserRegister(
-      {Key? key,
-      required this.token,
-      required this.employees,
-      required this.roles})
+  const UserUpdate({Key? key,
+    required this.token,
+    required this.employees,
+    required this.roles,
+    required this.user})
       : super(key: key);
 
   @override
-  State<UserRegister> createState() => _UserRegisterState();
+  State<UserUpdate> createState() => _UserUpdateState();
 }
 
-class _UserRegisterState extends State<UserRegister> {
+class _UserUpdateState extends State<UserUpdate> {
   final formKey = GlobalKey<FormState>();
   bool status = false;
   final dateFormat = DateFormat("yyyy-MM-dd");
   final hourFormat = DateFormat("HH:mm:ss");
   bool _isLoading = false;
   bool _showError = false;
+  User? _editedUser;
 
   final nameController = TextEditingController();
   final mailController = TextEditingController();
   final defaultPasswordController = TextEditingController();
 
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.user != null){
+      _editedUser = widget.user;
+      nameController.text = _editedUser!.nome;
+      mailController.text = _editedUser!.email;
+      status = _editedUser!.ativo;
+      dropdownValueEmployee = widget.employees.firstWhere((e) => e.nome==_editedUser!.colaboradorNome).nome;
+      dropdownValueRole = widget.roles.firstWhere((r) => r.nomeRole==_editedUser!.roles.first.nomeRole).nomeRole;
+    }
+  }
+
   late List<String> employeesList =
-      widget.employees.map((e) => e.nome.toString()).toList();
+  widget.employees.map((e) => e.nome.toString()).toList();
   late String dropdownValueEmployee = employeesList.first;
 
   late List<String> rolesList =
-      roles.map((e) => e.nomeRole.toString()).toList();
+  roles.map((e) => e.nomeRole.toString()).toList();
   late String dropdownValueRole = rolesList.first;
 
   bool validateAndSave() {
@@ -68,9 +85,12 @@ class _UserRegisterState extends State<UserRegister> {
         _showError = false;
       });
       try {
-        Employee employeeChoose = widget.employees.firstWhere((e) => e.nome == dropdownValueEmployee);
-        Roles roleChoose = roles.firstWhere((r) => r.nomeRole == dropdownValueRole);
+        Employee employeeChoose = widget.employees.firstWhere((e) =>
+        e.nome == dropdownValueEmployee);
+        Roles roleChoose = roles.firstWhere((r) =>
+        r.nomeRole == dropdownValueRole);
 
+        Uri urlUpdateUser = Uri.parse(urlUsers.toString()+'/'+_editedUser!.id.toString());
         Map<String, String> header = {
           'Content-type': 'application/json',
           'Authorization': widget.token
@@ -85,10 +105,10 @@ class _UserRegisterState extends State<UserRegister> {
           "roleId": roleChoose.nomeRole,
         });
 
-        var responseUser = await http.post(urlUsers,
+        var responseUser = await http.put(urlUpdateUser,
             headers: header,
             body: body);
-        if (responseUser.statusCode == 201) {
+        if (responseUser.statusCode == 201 || responseUser.statusCode == 200) {
           Navigator.pop(context);
         } else {
           print(responseUser.statusCode);
@@ -133,12 +153,6 @@ class _UserRegisterState extends State<UserRegister> {
                   hintText: 'Digite o e-mail',
                   keyboardType: TextInputType.emailAddress,
                   controller: mailController,
-                ),
-                InputText(
-                  labelText: 'Senha Padrão',
-                  hintText: 'Digite uma senha',
-                  keyboardType: TextInputType.text,
-                  controller: defaultPasswordController,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(32.0),
@@ -195,11 +209,11 @@ class _UserRegisterState extends State<UserRegister> {
                                 items: employeesList
                                     .map<DropdownMenuItem<String>>(
                                         (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
                               ),
                             ),
                           ),
@@ -240,12 +254,12 @@ class _UserRegisterState extends State<UserRegister> {
                                   });
                                 },
                                 items: rolesList.map<DropdownMenuItem<String>>(
-                                    (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
                               ),
                             ),
                           ),
@@ -293,7 +307,7 @@ test(BuildContext context) {
     hideHeader: true,
     confirmText: 'OK',
     confirmTextStyle:
-        const TextStyle(inherit: false, color: Colors.red, fontSize: 22),
+    const TextStyle(inherit: false, color: Colors.red, fontSize: 22),
     title: const Text('Select duration'),
     selectedTextStyle: const TextStyle(color: Colors.blue),
     onConfirm: (Picker picker, List<int> value) {
