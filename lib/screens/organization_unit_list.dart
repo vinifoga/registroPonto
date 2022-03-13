@@ -47,7 +47,7 @@ class OrganizationUnitList extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => OrganizationUnitRegister()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => OrganizationUnitRegister(token: tokenEnvia,)));
         },
         backgroundColor: kPrimaryColor,
         child: Icon(Icons.add),
