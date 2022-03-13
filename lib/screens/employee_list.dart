@@ -44,6 +44,7 @@ class _EmployeeListState extends State<EmployeeList> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ListView.builder(
+                primary: false,
                 shrinkWrap: true,
                   itemCount: widget.employees.length,
                   itemBuilder: (context, index){
