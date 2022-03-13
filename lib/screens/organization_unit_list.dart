@@ -2,16 +2,25 @@
 import 'package:flutter/material.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/models/organization_unit.dart';
+import 'package:registroponto/screens/organization_unit_update.dart';
 
 import '../constants.dart';
 import 'employee_register.dart';
-import 'organiztion_unit_register.dart';
+import 'organization_unit_register.dart';
 
-class OrganizationUnitList extends StatelessWidget {
+class OrganizationUnitList extends StatefulWidget {
   final String tokenEnvia;
   final List<OrganizationUnit> units;
   OrganizationUnitList({Key? key, required this.tokenEnvia, required this.units}) : super(key: key);
 
+  @override
+  State<OrganizationUnitList> createState() => _OrganizationUnitListState();
+}
+
+class _OrganizationUnitListState extends State<OrganizationUnitList> {
+  bool _isLoading = true;
+  bool _showError = false;
+  late Widget _scaffoldBody;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,23 +29,26 @@ class OrganizationUnitList extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
-            itemCount: units.length,
+            itemCount: widget.units.length,
             itemBuilder: (context, index){
               return GestureDetector(
                 child: Card(
                   child: ListTile(
                     leading: Icon(Icons.apartment),
-                    title: Text(units[index].descricao),
+                    title: Text(widget.units[index].descricao),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('CNPJ: ${units[index].cnpj}'),
-                        Text('End.: ${units[index].rua}, ${units[index].numero} - ${units[index].bairro}'),
-                        Text('Status: ${units[index].ativo}'),
+                        Text('CNPJ: ${widget.units[index].cnpj}'),
+                        Text('End.: ${widget.units[index].rua}, ${widget.units[index].numero} - ${widget.units[index].bairro}'),
+                        Text('Status: ${widget.units[index].ativo}'),
                       ],
                     ),
-                    trailing: Icon(
-                      Icons.edit,
+                    trailing: IconButton(
+                      icon : Icon(Icons.edit),
+                      onPressed: () async {
+                        await updateUnit(widget.units[index]);
+                      },
                     ),
                     tileColor: kPrimaryLightColor,
                   ),
@@ -47,7 +59,7 @@ class OrganizationUnitList extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => OrganizationUnitRegister(token: tokenEnvia,)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => OrganizationUnitRegister(token: widget.tokenEnvia,)));
         },
         backgroundColor: kPrimaryColor,
         child: Icon(Icons.add),
@@ -116,6 +128,13 @@ class OrganizationUnitList extends StatelessWidget {
       // ),
     );
   }
+
+  Future<void> updateUnit(OrganizationUnit unit) async {
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.push(context, MaterialPageRoute(builder: (context) => OrganizationUnitUpdate(token: widget.tokenEnvia, unit: unit)));
+}
 }
 
 
