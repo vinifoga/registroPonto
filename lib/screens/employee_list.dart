@@ -18,6 +18,9 @@ late List<JobTitle> jobTitles = [];
 Uri urlUnits = Uri.parse("https://registro-ponto-api.herokuapp.com/unidades");
 late List<OrganizationUnit> units = [];
 
+Uri urlEmployees = Uri.parse("https://registro-ponto-api.herokuapp.com/colaboradores");
+late List<Employee> employees = [];
+
 class EmployeeList extends StatefulWidget {
   final String tokenEnvia;
   final List<Employee> employees;
@@ -28,12 +31,88 @@ class EmployeeList extends StatefulWidget {
 
   @override
   State<EmployeeList> createState() => _EmployeeListState();
+
 }
 
 class _EmployeeListState extends State<EmployeeList> {
   bool _isLoading = true;
   bool _showError = false;
-  List<String> teste = [];
+  late Widget _scaffoldBody;
+
+
+  @override
+  void initState() {
+    _scaffoldBody = SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView.builder(
+              primary: false,
+              shrinkWrap: true,
+              itemCount: widget.employees.length,
+              itemBuilder: (context, index) {
+                return Dismissible(
+                  key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
+                  background: Container(
+                    color: Colors.red,
+                    child: const Align(
+                      alignment: Alignment(-0.9, 0.0),
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  direction: DismissDirection.startToEnd,
+                  onDismissed: (direction){
+                    setState(() async {
+                      await deleteEmployee(widget.employees[index]);
+                    });
+                  },
+                  child: GestureDetector(
+                    child: Card(
+                      child: ListTile(
+                        leading: Icon(Icons.person),
+                        title: Text(widget.employees[index].nome),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Cargo: ${widget.employees[index].cargo.descricao}'),
+                            Text(
+                                'Departamento: ${widget.employees[index].cargo.departamento.descricao}'),
+                            Text('Status: ${widget.employees[index].ativo}'),
+                          ],
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () async {
+                            await updateEmployee(widget.employees[index]);
+                          },
+                        ),
+                        tileColor: kPrimaryLightColor,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(50),
+            margin: const EdgeInsets.all(50),
+            child: Center(
+              child: _isLoading
+                  ? const Text('')
+                  : const CircularProgressIndicator(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,77 +122,7 @@ class _EmployeeListState extends State<EmployeeList> {
         appBarTitle: 'Colaboradores',
         showImage: false,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView.builder(
-                primary: false,
-                shrinkWrap: true,
-                itemCount: widget.employees.length,
-                itemBuilder: (context, index) {
-                  return Dismissible(
-                    key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
-                    background: Container(
-                      color: Colors.red,
-                      child: const Align(
-                        alignment: Alignment(-0.9, 0.0),
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    direction: DismissDirection.startToEnd,
-                    onDismissed: (direction){
-                      setState(() {
-                        print('lixo');
-                      });
-                    },
-                    child: GestureDetector(
-                      child: Card(
-                        child: ListTile(
-                          leading: Icon(Icons.person),
-                          title: Text(widget.employees[index].nome),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  'Cargo: ${widget.employees[index].cargo.descricao}'),
-                              Text(
-                                  'Departamento: ${widget.employees[index].cargo.departamento.descricao}'),
-                              Text('Status: ${widget.employees[index].ativo}'),
-                            ],
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () async {
-                              await updateEmployee(widget.employees[index]);
-                            },
-                          ),
-                          tileColor: kPrimaryLightColor,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(50),
-              margin: const EdgeInsets.all(50),
-              child: Center(
-                child: _isLoading
-                    ? const Text('')
-                    : const CircularProgressIndicator(),
-              ),
-            ),
-          ],
-        ),
-      ),
-
+      body: _scaffoldBody,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await findJobTitles();
@@ -268,5 +277,121 @@ class _EmployeeListState extends State<EmployeeList> {
                   units: units,
                   employee: employee,
                 )));
+  }
+  Future<void> deleteEmployee(Employee employee) async {
+    setState(() {
+      _isLoading = false;
+    });
+    try {
+      Uri urlDeleteEmployee = Uri.parse(urlEmployees.toString()+'/'+employee.matricula.toString());
+      var response = await http.delete(urlDeleteEmployee, headers: {
+        'Content-type': 'application/json',
+        'Authorization': widget.tokenEnvia
+      });
+      if (response.statusCode == 200) {
+       print('Colaborador Excluido');
+      } else {
+        throw Exception('Falha ao excluir Colaborador');
+      }
+    } catch (e) {}
+    setState(() {
+      _isLoading = true;
+      findEmployees();
+    });
+
+  }
+
+  Future<void> findEmployees() async {
+    List<Employee> emploeeysUpdateList = [];
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      var response = await http.get(urlEmployees, headers: {
+        'Content-type': 'application/json',
+        'Authorization': widget.tokenEnvia
+      });
+      if (response.statusCode == 200) {
+        emploeeysUpdateList = (json.decode(response.body) as List)
+            .map((i) => Employee.fromJson(i)).toList();
+      } else {
+        throw Exception('Falha ao buscar Colaboradores');
+      }
+    } catch (e) {
+
+    }
+    setState(() {
+      _scaffoldBody = SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView.builder(
+                primary: false,
+                shrinkWrap: true,
+                itemCount: emploeeysUpdateList.length,
+                itemBuilder: (context, index) {
+                  return Dismissible(
+                    key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
+                    background: Container(
+                      color: Colors.red,
+                      child: const Align(
+                        alignment: Alignment(-0.9, 0.0),
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    direction: DismissDirection.startToEnd,
+                    onDismissed: (direction){
+                      setState(() async {
+                        await deleteEmployee(emploeeysUpdateList[index]);
+                      });
+                    },
+                    child: GestureDetector(
+                      child: Card(
+                        child: ListTile(
+                          leading: Icon(Icons.person),
+                          title: Text(emploeeysUpdateList[index].nome),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  'Cargo: ${emploeeysUpdateList[index].cargo.descricao}'),
+                              Text(
+                                  'Departamento: ${emploeeysUpdateList[index].cargo.departamento.descricao}'),
+                              Text('Status: ${emploeeysUpdateList[index].ativo}'),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () async {
+                              await updateEmployee(emploeeysUpdateList[index]);
+                            },
+                          ),
+                          tileColor: kPrimaryLightColor,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(50),
+              margin: const EdgeInsets.all(50),
+              child: Center(
+                child: _isLoading
+                    ? const Text('')
+                    : const CircularProgressIndicator(),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+    _isLoading = false;
   }
 }
