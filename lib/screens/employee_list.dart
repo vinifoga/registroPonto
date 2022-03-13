@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:registroponto/models/organization_unit.dart';
 
 import '../constants.dart';
 import 'employee_register.dart';
+import 'employee_update.dart';
 
 Uri urlJobTitles = Uri.parse("https://registro-ponto-api.herokuapp.com/cargos");
 late List<JobTitle> jobTitles = [];
@@ -21,7 +21,10 @@ late List<OrganizationUnit> units = [];
 class EmployeeList extends StatefulWidget {
   final String tokenEnvia;
   final List<Employee> employees;
-  const EmployeeList({Key? key, required this.tokenEnvia, required this.employees}) : super(key: key);
+
+  const EmployeeList(
+      {Key? key, required this.tokenEnvia, required this.employees})
+      : super(key: key);
 
   @override
   State<EmployeeList> createState() => _EmployeeListState();
@@ -36,7 +39,10 @@ class _EmployeeListState extends State<EmployeeList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarRp(
-        showBackArrow: true, appBarTitle: 'Colaboradores', showImage: false,),
+        showBackArrow: true,
+        appBarTitle: 'Colaboradores',
+        showImage: false,
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -46,29 +52,34 @@ class _EmployeeListState extends State<EmployeeList> {
               child: ListView.builder(
                 primary: false,
                 shrinkWrap: true,
-                  itemCount: widget.employees.length,
-                  itemBuilder: (context, index){
-                    return GestureDetector(
-                      child: Card(
-                        child: ListTile(
-                          leading: Icon(Icons.person),
-                          title: Text(widget.employees[index].nome),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Cargo: ${widget.employees[index].cargo.descricao}'),
-                              Text('Departamento: ${widget.employees[index].cargo.departamento.descricao}'),
-                              Text('Status: ${widget.employees[index].ativo}'),
-                            ],
-                          ),
-                          trailing: Icon(
-                            Icons.edit,
-                          ),
-                          tileColor: kPrimaryLightColor,
+                itemCount: widget.employees.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    child: Card(
+                      child: ListTile(
+                        leading: Icon(Icons.person),
+                        title: Text(widget.employees[index].nome),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Cargo: ${widget.employees[index].cargo.descricao}'),
+                            Text(
+                                'Departamento: ${widget.employees[index].cargo.departamento.descricao}'),
+                            Text('Status: ${widget.employees[index].ativo}'),
+                          ],
                         ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () async {
+                            await updateEmployee(widget.employees[index]);
+                          },
+                        ),
+                        tileColor: kPrimaryLightColor,
                       ),
-                    );
-                  },
+                    ),
+                  );
+                },
               ),
             ),
             Container(
@@ -84,10 +95,8 @@ class _EmployeeListState extends State<EmployeeList> {
         ),
       ),
 
-
       floatingActionButton: FloatingActionButton(
-
-        onPressed: () async{
+        onPressed: () async {
           await findJobTitles();
         },
         backgroundColor: kPrimaryColor,
@@ -169,14 +178,12 @@ class _EmployeeListState extends State<EmployeeList> {
       });
       if (response.statusCode == 200) {
         jobTitles = (json.decode(response.body) as List)
-            .map((i) => JobTitle.fromJson(i)).toList();
-
+            .map((i) => JobTitle.fromJson(i))
+            .toList();
       } else {
         throw Exception('Falha ao buscar Cargos');
       }
-    } catch (e) {
-
-    }
+    } catch (e) {}
     try {
       var response = await http.get(urlUnits, headers: {
         'Content-type': 'application/json',
@@ -184,19 +191,63 @@ class _EmployeeListState extends State<EmployeeList> {
       });
       if (response.statusCode == 200) {
         units = (json.decode(response.body) as List)
-            .map((i) => OrganizationUnit.fromJson(i)).toList();
-
+            .map((i) => OrganizationUnit.fromJson(i))
+            .toList();
       } else {
         throw Exception('Falha ao buscar Unidades');
       }
-    } catch (e) {
-
-    }
+    } catch (e) {}
     setState(() {
       _isLoading = true;
     });
-    Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeeRegister(token : widget.tokenEnvia, jobTitles : jobTitles, units: units)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EmployeeRegister(
+                token: widget.tokenEnvia, jobTitles: jobTitles, units: units)));
+  }
+
+  Future<void> updateEmployee(Employee employee) async {
+    setState(() {
+      _isLoading = false;
+    });
+    try {
+      var response = await http.get(urlJobTitles, headers: {
+        'Content-type': 'application/json',
+        'Authorization': widget.tokenEnvia
+      });
+      if (response.statusCode == 200) {
+        jobTitles = (json.decode(response.body) as List)
+            .map((i) => JobTitle.fromJson(i))
+            .toList();
+      } else {
+        throw Exception('Falha ao buscar Cargos');
+      }
+    } catch (e) {}
+    try {
+      var response = await http.get(urlUnits, headers: {
+        'Content-type': 'application/json',
+        'Authorization': widget.tokenEnvia
+      });
+      if (response.statusCode == 200) {
+        units = (json.decode(response.body) as List)
+            .map((i) => OrganizationUnit.fromJson(i))
+            .toList();
+      } else {
+        throw Exception('Falha ao buscar Unidades');
+      }
+    } catch (e) {}
+    setState(() {
+      _isLoading = true;
+    });
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EmployeeUpdate(
+                  token: widget.tokenEnvia,
+                  jobTitles: jobTitles,
+                  units: units,
+                  employee: employee,
+                )));
   }
 }
-
-

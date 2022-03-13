@@ -27,6 +27,8 @@ class Employee{
   late final horaSaiSabado;
   late OrganizationUnit unidadeOrganizacional;
 
+
+
   Employee({
       this.matricula,
       this.email,
