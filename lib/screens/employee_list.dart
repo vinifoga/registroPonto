@@ -54,28 +54,47 @@ class _EmployeeListState extends State<EmployeeList> {
                 shrinkWrap: true,
                 itemCount: widget.employees.length,
                 itemBuilder: (context, index) {
-                  return GestureDetector(
-                    child: Card(
-                      child: ListTile(
-                        leading: Icon(Icons.person),
-                        title: Text(widget.employees[index].nome),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                'Cargo: ${widget.employees[index].cargo.descricao}'),
-                            Text(
-                                'Departamento: ${widget.employees[index].cargo.departamento.descricao}'),
-                            Text('Status: ${widget.employees[index].ativo}'),
-                          ],
+                  return Dismissible(
+                    key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
+                    background: Container(
+                      color: Colors.red,
+                      child: const Align(
+                        alignment: Alignment(-0.9, 0.0),
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.white,
                         ),
-                        trailing: IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () async {
-                            await updateEmployee(widget.employees[index]);
-                          },
+                      ),
+                    ),
+                    direction: DismissDirection.startToEnd,
+                    onDismissed: (direction){
+                      setState(() {
+                        print('lixo');
+                      });
+                    },
+                    child: GestureDetector(
+                      child: Card(
+                        child: ListTile(
+                          leading: Icon(Icons.person),
+                          title: Text(widget.employees[index].nome),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  'Cargo: ${widget.employees[index].cargo.descricao}'),
+                              Text(
+                                  'Departamento: ${widget.employees[index].cargo.departamento.descricao}'),
+                              Text('Status: ${widget.employees[index].ativo}'),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () async {
+                              await updateEmployee(widget.employees[index]);
+                            },
+                          ),
+                          tileColor: kPrimaryLightColor,
                         ),
-                        tileColor: kPrimaryLightColor,
                       ),
                     ),
                   );
