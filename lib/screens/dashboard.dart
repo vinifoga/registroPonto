@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/models/punch_clocking.dart';
@@ -18,21 +19,27 @@ import 'balance.dart';
 Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/registros");
 late List<PunchClocking> punchs = [];
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   final String tokenEnvia;
   final User user;
 
   const Dashboard({Key? key, required this.tokenEnvia, required this.user})
       : super(key: key);
 
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  String qrcodeResult = '';
   void findPunchClocking() async {
     Uri urlRegistros = Uri.parse(
-        'https://registro-ponto-api.herokuapp.com/registros?colaboradorId=${user
+        'https://registro-ponto-api.herokuapp.com/registros?colaboradorId=${widget.user
             .id}');
     try {
       var responsePunch = await http.get(urlRegistros, headers: {
         'Content-type': 'application/json',
-        'Authorization': tokenEnvia
+        'Authorization': widget.tokenEnvia
       });
       if (responsePunch.statusCode == 200) {
         Map<String, dynamic> map = jsonDecode(responsePunch.body.toString());
@@ -57,60 +64,20 @@ class Dashboard extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(8),
         children: <Widget>[
-          Card(
-            child: ListTile(
-              title: Text(punchs[3].colaboradorNome),
-              subtitle: Text(punchs[3].data.toString().substring(8, 10) + '/'
-                  + punchs[3].data.toString().substring(5, 7) + '/'
-                  + punchs[3].data.toString().substring(0, 4) + '    '
-                  + punchs[3].hora.toString()),
-              trailing: const Icon(
-                Icons.call_received,
-                color: Colors.green,
-              ),
-              tileColor: kPrimaryLightColor,
-            ),
-          ),
-          Card(
-            child: ListTile(
-              title: Text(punchs[2].colaboradorNome),
-              subtitle: Text(punchs[2].data.toString().substring(8, 10) + '/'
-                  + punchs[2].data.toString().substring(5, 7) + '/'
-                  + punchs[2].data.toString().substring(0, 4) + '   '
-                  + punchs[2].hora.toString()),
-              trailing: const Icon(
-                Icons.call_made,
-                color: Colors.red,
-              ),
-              tileColor: kPrimaryLightColor,
-            ),
-          ), Card(
-            child: ListTile(
-              title: Text(punchs[1].colaboradorNome),
-              subtitle: Text(punchs[1].data.toString().substring(8, 10) + '/'
-                  + punchs[1].data.toString().substring(5, 7) + '/'
-                  + punchs[1].data.toString().substring(0, 4) + '    '
-                  + punchs[1].hora.toString()),
-              trailing: const Icon(
-                Icons.call_received,
-                color: Colors.green,
-              ),
-              tileColor: kPrimaryLightColor,
-            ),
-          ), Card(
-            child: ListTile(
-              title: Text(punchs[0].colaboradorNome),
-              subtitle: Text(punchs[0].data.toString().substring(8, 10) + '/'
-                  + punchs[0].data.toString().substring(5, 7) + '/'
-                  + punchs[0].data.toString().substring(0, 4) + '    '
-                  + punchs[0].hora.toString()),
-              trailing: const Icon(
-                Icons.call_made,
-                color: Colors.red,
-              ),
-              tileColor: kPrimaryLightColor,
-            ),
-          ),
+          // Card(
+          //   child: ListTile(
+          //     title: Text(punchs[punchs.length].colaboradorNome),
+          //     subtitle: Text(punchs[punchs.length].data.toString().substring(8, 10) + '/'
+          //         + punchs[punchs.length].data.toString().substring(5, 7) + '/'
+          //         + punchs[punchs.length].data.toString().substring(0, 4) + '    '
+          //         + punchs[punchs.length].hora.toString()),
+          //     trailing: const Icon(
+          //       Icons.call_received,
+          //       color: Colors.green,
+          //     ),
+          //     tileColor: kPrimaryLightColor,
+          //   ),
+          // ),
 
           GestureDetector(
               child: const Card(
@@ -131,6 +98,7 @@ class Dashboard extends StatelessWidget {
                   ),
                 )
               }),
+          Text(qrcodeResult),
         ],
       ),
       drawer: Drawer(
@@ -150,8 +118,7 @@ class Dashboard extends StatelessWidget {
                 children: [
                   IconButton(onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder : (context) => Balance()));
-
+                        MaterialPageRoute(builder: (context) => Balance()));
                   }, icon: const Icon(Icons.account_balance), iconSize: 27,),
                   const Text('Saldo', style: TextStyle(fontSize: 24),)
                 ],
@@ -160,8 +127,7 @@ class Dashboard extends StatelessWidget {
                 children: [
                   IconButton(onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder : (context) => Alerts()));
-
+                        MaterialPageRoute(builder: (context) => Alerts()));
                   }, icon: const Icon(Icons.warning), iconSize: 27,),
                   const Text('Alertas', style: TextStyle(fontSize: 24),)
                 ],
@@ -170,8 +136,8 @@ class Dashboard extends StatelessWidget {
                 children: [
                   IconButton(onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder : (context) => const SickNote()));
-
+                        MaterialPageRoute(
+                            builder: (context) => const SickNote()));
                   }, icon: const Icon(Icons.now_wallpaper), iconSize: 27,),
                   const Text('Enviar Atestado', style: TextStyle(fontSize: 24),)
                 ],
@@ -180,8 +146,8 @@ class Dashboard extends StatelessWidget {
                 children: [
                   IconButton(onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder : (context) => PunchClockingScreen()));
-
+                        MaterialPageRoute(
+                            builder: (context) => PunchClockingScreen()));
                   }, icon: const Icon(Icons.edit), iconSize: 27,),
                   const Text('Correções', style: TextStyle(fontSize: 24),)
                 ],
@@ -190,8 +156,8 @@ class Dashboard extends StatelessWidget {
                 children: [
                   IconButton(onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder : (context) => const LoginScreen()));
-
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()));
                   }, icon: const Icon(Icons.exit_to_app), iconSize: 27,),
                   const Text('Sair', style: TextStyle(fontSize: 24),)
                 ],
@@ -202,9 +168,21 @@ class Dashboard extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: floatActionButtonColor,
-        onPressed: () {},
+        onPressed: readQRCode,
         child: const Icon(Icons.fingerprint), //icon inside button
       ),
     );
+  }
+
+  //Colocar em um try
+  readQRCode() async {
+    print('eraqwe');
+    String code = await FlutterBarcodeScanner.scanBarcode(
+      "#FFFFFF",
+      "Cancelar",
+      false,
+      ScanMode.QR,
+    );
+    setState(() => qrcodeResult = code != '-1' ? code : 'Falha ao ler QRCode');
   }
 }
