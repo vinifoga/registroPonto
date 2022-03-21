@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:registroponto/components/input_text.dart';
@@ -219,7 +220,8 @@ class _LoginBodyState extends State<LoginBody> {
   }
 
   Future<List<PunchClocking>> findPunchClocking(String tokenEnvia, User user) async {
-    Uri urlRegistroColaborador = Uri.parse(urlRegistros.toString()+'?colaboradorId=${user.id}');
+    DateTime data = DateTime.now();
+    Uri urlRegistroColaborador = Uri.parse(urlRegistros.toString()+'?colaboradorId=${user.id}&data='+formatDate(data, [yyyy,'-',mm,'-',dd]));
     try {
       var responsePunch = await http.get(urlRegistroColaborador, headers: {
         'Content-type': 'application/json',

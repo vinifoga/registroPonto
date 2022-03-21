@@ -55,7 +55,7 @@ class _UserUpdateState extends State<UserUpdate> {
       nameController.text = _editedUser!.nome;
       mailController.text = _editedUser!.email;
       status = _editedUser!.ativo;
-      dropdownValueEmployee = widget.employees.firstWhere((e) => e.nome==_editedUser!.colaboradorId).nome;
+      dropdownValueEmployee = widget.employees.firstWhere((e) => e.matricula==_editedUser!.colaboradorId).nome;
       dropdownValueRole = widget.roles.firstWhere((r) => r.nomeRole==_editedUser!.roles.first.nomeRole).nomeRole;
     }
   }

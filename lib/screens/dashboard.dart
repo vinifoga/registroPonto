@@ -33,7 +33,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   String qrcodeResult = '';
-  bool _isLoading = false;
+  bool _isLoading = true;
   bool _showError = false;
   late Widget _scaffoldBody;
   Uri urlRegistros = Uri.parse(
