@@ -8,9 +8,9 @@ class PunchClocking{
   late final data;
   late final hora;
   late final status;
-  late final colaboradorNome;
+  late final colaboradorId;
 
-  PunchClocking({this.codRegistro, this.data, this.hora, this.status, this.colaboradorNome});
+  PunchClocking({this.codRegistro, this.data, this.hora, this.status, this.colaboradorId});
 
   factory PunchClocking.fromJson(Map<String, dynamic> json) => _$PunchClockingFromJson(json);
 

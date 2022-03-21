@@ -5,7 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:registroponto/components/input_text.dart';
 import 'package:registroponto/components/rounded_button.dart';
 import 'package:http/http.dart' as http;
+import 'package:registroponto/models/punch_clocking.dart';
 import 'package:registroponto/models/roles.dart';
+import 'package:registroponto/models/sort_pageable_punch_clocking.dart';
 import 'package:registroponto/models/user.dart';
 import 'package:registroponto/screens/dashboard.dart';
 import 'package:registroponto/screens/dashboard_hr_analist.dart';
@@ -17,6 +19,8 @@ import 'background.dart';
 
 Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/auth");
 Uri urlUser = Uri.parse("https://registro-ponto-api.herokuapp.com/usuarios");
+Uri urlRegistros = Uri.parse("https://registro-ponto-api.herokuapp.com/registros");
+
 
 class LoginBody extends StatefulWidget {
   const LoginBody({Key? key}) : super(key: key);
@@ -33,6 +37,7 @@ class _LoginBodyState extends State<LoginBody> {
   bool _showError = false;
   bool obscurePassword = true;
   Color colorShowPassword = Colors.grey;
+  late List<PunchClocking> punchs = [];
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -100,11 +105,10 @@ class _LoginBodyState extends State<LoginBody> {
               MaterialPageRoute(
                   builder: (context) => DashboardHRAnalist(tokenEnvia: tokenEnvia,user: user,)));
         } else if (perfil == 'colaborador') {
+          late List<PunchClocking> punchs = [];
+          punchs = await findPunchClocking(tokenEnvia, user);
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => Dashboard(tokenEnvia: tokenEnvia, user: user,)));
-        } else if (perfil == 'admin'){
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => Dashboard(tokenEnvia: tokenEnvia, user: user,)));
+              MaterialPageRoute(builder: (context) => Dashboard(tokenEnvia: tokenEnvia, user: user, punchs: punchs)));
         }
       } catch (e) {
         print(e);
@@ -212,5 +216,26 @@ class _LoginBodyState extends State<LoginBody> {
             ),
           )),
     );
+  }
+
+  Future<List<PunchClocking>> findPunchClocking(String tokenEnvia, User user) async {
+    Uri urlRegistroColaborador = Uri.parse(urlRegistros.toString()+'?colaboradorId=${user.id}');
+    try {
+      var responsePunch = await http.get(urlRegistroColaborador, headers: {
+        'Content-type': 'application/json',
+        'Authorization': tokenEnvia
+      });
+      if (responsePunch.statusCode == 200) {
+        Map<String, dynamic> map = jsonDecode(responsePunch.body.toString());
+        SortPageablePunchClocking sortPageablePunchClocking =
+        SortPageablePunchClocking.fromJson(map);
+        punchs = sortPageablePunchClocking.content;
+      } else {
+        throw Exception('Falha ao buscar Registros');
+      }
+    } catch (e) {
+      ('Falha ao buscar Registros');
+    }
+    return punchs;
   }
 }

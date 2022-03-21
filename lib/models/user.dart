@@ -8,11 +8,11 @@ class User{
   late final int id;
   late final String nome;
   late final bool ativo;
-  late final String colaboradorNome;
+  late final int colaboradorId;
   late final String email;
   late List<Roles> roles;
 
-  User({required this.id, required this.nome, required this.ativo, required this.colaboradorNome, required this.email, required this.roles});
+  User({required this.id, required this.nome, required this.ativo, required this.colaboradorId, required this.email, required this.roles});
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

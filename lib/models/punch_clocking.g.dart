@@ -12,7 +12,7 @@ PunchClocking _$PunchClockingFromJson(Map<String, dynamic> json) =>
       data: json['data'],
       hora: json['hora'],
       status: json['status'],
-      colaboradorNome: json['colaboradorNome'],
+      colaboradorId: json['colaboradorId'],
     );
 
 Map<String, dynamic> _$PunchClockingToJson(PunchClocking instance) =>
@@ -21,5 +21,5 @@ Map<String, dynamic> _$PunchClockingToJson(PunchClocking instance) =>
       'data': instance.data,
       'hora': instance.hora,
       'status': instance.status,
-      'colaboradorNome': instance.colaboradorNome,
+      'colaboradorId': instance.colaboradorId,
     };
