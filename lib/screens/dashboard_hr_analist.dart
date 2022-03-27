@@ -107,7 +107,7 @@ class _DashboardHRAnalistState extends State<DashboardHRAnalist> {
                     IconButton(onPressed: () async{
                       findUsers();
                     }, icon: const Icon(Icons.supervised_user_circle), iconSize: 27,),
-                    const Text('Usuarios', style: TextStyle(fontSize: 24),)
+                    const Text('Usuários', style: TextStyle(fontSize: 24),)
                   ],
                 ),
               ),
