@@ -23,7 +23,7 @@ class MoreOptions extends StatelessWidget {
                 onTap: () => {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(),
+                      builder: (context) => PunchClockingScreen(punchs: [],),
                     ),
                   )
                 }),
@@ -32,7 +32,7 @@ class MoreOptions extends StatelessWidget {
                 onTap: () => {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(),
+                      builder: (context) => PunchClockingScreen(punchs: [],),
                     ),
                   )
                 }),
@@ -41,7 +41,7 @@ class MoreOptions extends StatelessWidget {
                 onTap: () => {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(),
+                      builder: (context) => PunchClockingScreen(punchs: [],),
                     ),
                   )
                 }),
@@ -50,7 +50,7 @@ class MoreOptions extends StatelessWidget {
                 onTap: () => {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(),
+                      builder: (context) => PunchClockingScreen(punchs: [],),
                     ),
                   )
                 }),

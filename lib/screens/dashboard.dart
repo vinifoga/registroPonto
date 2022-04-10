@@ -95,12 +95,14 @@ class _DashboardState extends State<Dashboard> {
                   tileColor: kPrimaryLightColor,
                 ),
               ),
-              onTap: () => {
+              onTap: () async {
+                late List<PunchClocking> otherPunchs = [];
+                otherPunchs = await findPunchClocking(widget.tokenEnvia, widget.user);
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => PunchClockingScreen(),
+                    builder: (context) => PunchClockingScreen(punchs: otherPunchs,),
                   ),
-                )
+                );
               }),
           Text(qrcodeResult),
           Container(
@@ -198,7 +200,7 @@ class _DashboardState extends State<Dashboard> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => PunchClockingScreen()));
+                              builder: (context) => PunchClockingScreen(punchs: [],)));
                     },
                     icon: const Icon(Icons.edit),
                     iconSize: 27,
@@ -365,12 +367,14 @@ class _DashboardState extends State<Dashboard> {
                     tileColor: kPrimaryLightColor,
                   ),
                 ),
-                onTap: () => {
+                onTap: () async {
+                  late List<PunchClocking> otherPunchs = [];
+                  otherPunchs = await findPunchClocking(widget.tokenEnvia, widget.user);
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(),
+                      builder: (context) => PunchClockingScreen(punchs: otherPunchs,),
                     ),
-                  )
+                  );
                 }),
             Container(
               padding: const EdgeInsets.all(50),
@@ -385,7 +389,27 @@ class _DashboardState extends State<Dashboard> {
         ),
       );
     });
+  }
 
+  Future<List<PunchClocking>> findPunchClocking(String tokenEnvia, User user) async {
+    Uri urlRegistroColaborador = Uri.parse(urlRegistros.toString()+'?colaboradorId=${user.id}&data=');
+    try {
+      var responsePunch = await http.get(urlRegistroColaborador, headers: {
+        'Content-type': 'application/json',
+        'Authorization': tokenEnvia
+      });
+      if (responsePunch.statusCode == 200) {
+        Map<String, dynamic> map = jsonDecode(responsePunch.body.toString());
+        SortPageablePunchClocking sortPageablePunchClocking =
+        SortPageablePunchClocking.fromJson(map);
+        punchs = sortPageablePunchClocking.content;
+      } else {
+        throw Exception('Falha ao buscar Registros');
+      }
+    } catch (e) {
+      ('Falha ao buscar Registros');
+    }
+    return punchs;
   }
 
 }

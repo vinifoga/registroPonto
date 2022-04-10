@@ -28,7 +28,7 @@ class UploadFile extends StatelessWidget {
                 {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(),
+                      builder: (context) => PunchClockingScreen(punchs: [],),
                     ),
                   )
                 }),
@@ -47,7 +47,7 @@ class UploadFile extends StatelessWidget {
                 {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(),
+                      builder: (context) => PunchClockingScreen(punchs: [],),
                     ),
                   )
                 }),

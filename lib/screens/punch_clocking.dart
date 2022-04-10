@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/constants.dart';
+import 'package:registroponto/models/punch_clocking.dart';
 import 'package:registroponto/screens/reclaim_punch.dart';
 
 class PunchClockingScreen extends StatefulWidget {
-  PunchClockingScreen({Key? key}) : super(key: key);
+  final List<PunchClocking> punchs;
+  PunchClockingScreen({Key? key, required this.punchs}) : super(key: key);
+
 
   @override
   State<PunchClockingScreen> createState() => _PunchClockingScreenState();
@@ -13,6 +16,9 @@ class PunchClockingScreen extends StatefulWidget {
 class _PunchClockingScreenState extends State<PunchClockingScreen> {
   late List<bool> isSelected;
   late int _index = 0;
+  bool _isLoading = true;
+  bool _showError = false;
+
 
   @override
   void initState() {
@@ -87,31 +93,56 @@ class _PunchClockingScreenState extends State<PunchClockingScreen> {
   Column selectedItem(int index) {
     if (index == 0) {
       return Column(
-        children: [
-          const Card(
-            child: ListTile(
-              title: Text('Entrada'),
-              subtitle: Text('02/09/2021 - 8:00'),
-              trailing: Icon(
-                Icons.call_received,
-                color: Colors.green,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView.builder(
+                primary: false,
+                shrinkWrap: true,
+                itemCount: widget.punchs.length,
+                itemBuilder: (context, index){
+                  return Card(
+                    child: ListTile(
+                      leading: Icon(Icons.hourglass_bottom),
+                      title: Text(widget.punchs[index].status),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Data: ${widget.punchs[index].data}'),
+                          Text('Hora: ${widget.punchs[index].hora}'),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                // Card(
+                //   child: ListTile(
+                //     title: Text(punchs[punchs.length].colaboradorNome),
+                //     subtitle: Text(punchs[punchs.length].data.toString().substring(8, 10) + '/'
+                //         + punchs[punchs.length].data.toString().substring(5, 7) + '/'
+                //         + punchs[punchs.length].data.toString().substring(0, 4) + '    '
+                //         + punchs[punchs.length].hora.toString()),
+                //     trailing: const Icon(
+                //       Icons.call_received,
+                //       color: Colors.green,
+                //     ),
+                //     tileColor: kPrimaryLightColor,
+                //   ),
+                // ),
               ),
-              tileColor: kPrimaryLightColor,
             ),
-          ),
-          const Card(
-            child: ListTile(
-              title: Text('Saída'),
-              subtitle: Text('02/09/2021 - 8:00'),
-              trailing: Icon(
-                Icons.call_made,
-                color: Colors.red,
+            Container(
+              padding: const EdgeInsets.all(50),
+              margin: const EdgeInsets.all(50),
+              child: Center(
+                child: _isLoading
+                    ? const Text('')
+                    : const CircularProgressIndicator(),
               ),
-              tileColor: kPrimaryLightColor,
             ),
-          ),
-        ],
-      );
+          ],
+        );
     } else {
       return Column(
         children: [
