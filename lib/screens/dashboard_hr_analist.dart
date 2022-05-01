@@ -7,6 +7,8 @@ import 'package:registroponto/components/bottom_app_bar_option.dart';
 import 'package:registroponto/models/employee.dart';
 import 'package:registroponto/models/job_title.dart';
 import 'package:registroponto/models/organization_unit.dart';
+import 'package:registroponto/models/punch_clocking.dart';
+import 'package:registroponto/models/sort_pageable_punch_clocking.dart';
 import 'package:registroponto/models/user.dart';
 import 'package:registroponto/screens/exit.dart';
 import 'package:registroponto/screens/login_screen.dart';
@@ -45,6 +47,8 @@ class DashboardHRAnalist extends StatefulWidget {
 
 class _DashboardHRAnalistState extends State<DashboardHRAnalist> {
   bool _isLoading = false;
+  late List<PunchClocking> punchs;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,9 +74,9 @@ class _DashboardHRAnalistState extends State<DashboardHRAnalist> {
                 padding: const EdgeInsets.fromLTRB(32.0, 25.0, 32.0, 0.0),
                 child: Row(
                   children: [
-                    IconButton(onPressed: () {
-                      Navigator.push(context,
-                      MaterialPageRoute(builder : (context) => const ReclaimPunchHR()));
+                    IconButton(onPressed: () async {
+                      late List<PunchClocking> allPunchs = [];
+                      findPunchClocking();
                     }, icon: const Icon(Icons.edit), iconSize: 27,),
                     const Text('Correções', style: TextStyle(fontSize: 24),)
                   ],
@@ -222,6 +226,34 @@ class _DashboardHRAnalistState extends State<DashboardHRAnalist> {
 
     }
     Navigator.push(context, MaterialPageRoute(builder: (context) => UserList(tokenEnvia: widget.tokenEnvia, users: users, employees: employees)));
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> findPunchClocking() async {
+    setState(() {
+      _isLoading = true;
+    });
+    Uri urlRegistroColaborador = Uri.parse(url.toString()+'?colaboradorId=&data=');
+    try {
+      var responsePunch = await http.get(urlRegistroColaborador, headers: {
+        'Content-type': 'application/json',
+        'Authorization': widget.tokenEnvia
+      });
+      if (responsePunch.statusCode == 200) {
+        Map<String, dynamic> map = jsonDecode(responsePunch.body.toString());
+        SortPageablePunchClocking sortPageablePunchClocking =
+        SortPageablePunchClocking.fromJson(map);
+        punchs = sortPageablePunchClocking.content;
+      } else {
+        throw Exception('Falha ao buscar Registros');
+      }
+    } catch (e) {
+      ('Falha ao buscar Registros');
+    }
+    Navigator.push(context,
+        MaterialPageRoute(builder : (context) => ReclaimPunchHR(punchs: punchs, token: widget.tokenEnvia, user: widget.user,)));
     setState(() {
       _isLoading = false;
     });

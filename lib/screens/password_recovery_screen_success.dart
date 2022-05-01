@@ -41,7 +41,7 @@ class PasswordRecoveryScreenSuccess extends StatelessWidget {
                     image: AssetImage("assets/images/password_recovery.png"),
                     height: size.height * 0.3,
                   ),
-                  Text('Sua senha foi restaurado para a \'senha padrão\', caso não saiba qual o formato da senha padrão, consulte o RH !',style: GoogleFonts.robotoCondensed(
+                  Text('Sua senha foi restaurada para a \'senha padrão\', caso não saiba qual o formato da senha padrão, consulte o RH !',style: GoogleFonts.robotoCondensed(
                       fontSize: 20, color: titleColor,), textAlign: TextAlign.center,),
                   RoundedButton(
                       text: "ACESSAR", press: () {

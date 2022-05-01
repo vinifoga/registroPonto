@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/constants.dart';
 import 'package:registroponto/models/punch_clocking.dart';
+import 'package:registroponto/models/user.dart';
 import 'package:registroponto/screens/reclaim_punch.dart';
 
 class PunchClockingScreen extends StatefulWidget {
   final List<PunchClocking> punchs;
-  PunchClockingScreen({Key? key, required this.punchs}) : super(key: key);
+  final String token;
+  final User user;
+  const PunchClockingScreen({Key? key, required this.punchs, required this.token, required this.user}) : super(key: key);
 
 
   @override
@@ -18,12 +21,36 @@ class _PunchClockingScreenState extends State<PunchClockingScreen> {
   late int _index = 0;
   bool _isLoading = true;
   bool _showError = false;
+  late Widget _punchPadding;
 
 
   @override
   void initState() {
     isSelected = [true, false];
     super.initState();
+    _punchPadding = Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ListView.builder(
+        primary: false,
+        shrinkWrap: true,
+        itemCount: widget.punchs.length,
+        itemBuilder: (context, index){
+          return Card(
+            child: ListTile(
+              leading: Icon(Icons.hourglass_bottom),
+              title: Text(widget.punchs[index].status),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Data: ${widget.punchs[index].data}'),
+                  Text('Hora: ${widget.punchs[index].hora}'),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -79,7 +106,9 @@ class _PunchClockingScreenState extends State<PunchClockingScreen> {
           onPressed: () => {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ReclaimPunch(),
+                builder: (context) => ReclaimPunch(token: widget.token, user: widget.user,
+
+                ),
               ),
             ),
           },
@@ -95,43 +124,7 @@ class _PunchClockingScreenState extends State<PunchClockingScreen> {
       return Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView.builder(
-                primary: false,
-                shrinkWrap: true,
-                itemCount: widget.punchs.length,
-                itemBuilder: (context, index){
-                  return Card(
-                    child: ListTile(
-                      leading: Icon(Icons.hourglass_bottom),
-                      title: Text(widget.punchs[index].status),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Data: ${widget.punchs[index].data}'),
-                          Text('Hora: ${widget.punchs[index].hora}'),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                // Card(
-                //   child: ListTile(
-                //     title: Text(punchs[punchs.length].colaboradorNome),
-                //     subtitle: Text(punchs[punchs.length].data.toString().substring(8, 10) + '/'
-                //         + punchs[punchs.length].data.toString().substring(5, 7) + '/'
-                //         + punchs[punchs.length].data.toString().substring(0, 4) + '    '
-                //         + punchs[punchs.length].hora.toString()),
-                //     trailing: const Icon(
-                //       Icons.call_received,
-                //       color: Colors.green,
-                //     ),
-                //     tileColor: kPrimaryLightColor,
-                //   ),
-                // ),
-              ),
-            ),
+            _punchPadding,
             Container(
               padding: const EdgeInsets.all(50),
               margin: const EdgeInsets.all(50),
@@ -144,28 +137,30 @@ class _PunchClockingScreenState extends State<PunchClockingScreen> {
           ],
         );
     } else {
+      List<PunchClocking> otherPunchs = widget.punchs.where((e) => e.status != 'NORMAL').toList();
       return Column(
         children: [
-          const Card(
-            child: ListTile(
-              title: Text('Entrada'),
-              subtitle: Text('02/09/2021 - 8:00'),
-              trailing: Icon(
-                Icons.check,
-                color: Colors.green,
-              ),
-              tileColor: kPrimaryLightColor,
-            ),
-          ),
-          const Card(
-            child: ListTile(
-              title: Text('Saída'),
-              subtitle: Text('02/09/2021 - 8:00'),
-              trailing: Icon(
-                Icons.cancel_outlined,
-                color: Colors.red,
-              ),
-              tileColor: kPrimaryLightColor,
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView.builder(
+              primary: false,
+              shrinkWrap: true,
+              itemCount: otherPunchs.length,
+              itemBuilder: (context, index){
+                return Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.hourglass_bottom),
+                    title: Text(otherPunchs[index].status),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Data: ${otherPunchs[index].data}'),
+                        Text('Hora: ${otherPunchs[index].hora}'),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],

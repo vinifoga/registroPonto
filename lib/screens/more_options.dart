@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/components/card_options.dart';
+import 'package:registroponto/screens/login_screen.dart';
 import 'package:registroponto/screens/punch_clocking.dart';
 
 class MoreOptions extends StatelessWidget {
@@ -23,7 +24,7 @@ class MoreOptions extends StatelessWidget {
                 onTap: () => {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(punchs: [],),
+                      builder: (context) => LoginScreen(),
                     ),
                   )
                 }),
@@ -32,7 +33,7 @@ class MoreOptions extends StatelessWidget {
                 onTap: () => {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(punchs: [],),
+                      builder: (context) => LoginScreen(),
                     ),
                   )
                 }),
@@ -41,7 +42,7 @@ class MoreOptions extends StatelessWidget {
                 onTap: () => {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(punchs: [],),
+                      builder: (context) => LoginScreen(),
                     ),
                   )
                 }),
@@ -50,7 +51,7 @@ class MoreOptions extends StatelessWidget {
                 onTap: () => {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(punchs: [],),
+                      builder: (context) => LoginScreen(),
                     ),
                   )
                 }),

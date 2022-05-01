@@ -3,6 +3,8 @@ import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/constants.dart';
 import 'package:registroponto/screens/punch_clocking.dart';
 
+import 'login_screen.dart';
+
 class UploadFile extends StatelessWidget {
   const UploadFile({Key? key}) : super(key: key);
 
@@ -28,7 +30,7 @@ class UploadFile extends StatelessWidget {
                 {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(punchs: [],),
+                      builder: (context) => LoginScreen(),
                     ),
                   )
                 }),
@@ -47,7 +49,7 @@ class UploadFile extends StatelessWidget {
                 {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(punchs: [],),
+                      builder: (context) => LoginScreen(),
                     ),
                   )
                 }),

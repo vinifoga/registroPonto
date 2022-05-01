@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,6 +37,7 @@ class _DashboardState extends State<Dashboard> {
   bool _isLoading = true;
   bool _showError = false;
   late Widget _scaffoldBody;
+  late Widget _punchPadding;
   Uri urlRegistros = Uri.parse(
       'https://registro-ponto-api.herokuapp.com/registros');
 
@@ -43,78 +45,27 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    _scaffoldBody = SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ListView.builder(
-              primary: false,
-              shrinkWrap: true,
-              itemCount: widget.punchs.length,
-              itemBuilder: (context, index){
-                return Card(
-                  child: ListTile(
-                    leading: Icon(Icons.hourglass_bottom),
-                    title: Text(widget.punchs[index].status),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Data: ${widget.punchs[index].data}'),
-                        Text('Hora: ${widget.punchs[index].hora}'),
-                      ],
-                    ),
-                  ),
-                );
-              },
-              // Card(
-              //   child: ListTile(
-              //     title: Text(punchs[punchs.length].colaboradorNome),
-              //     subtitle: Text(punchs[punchs.length].data.toString().substring(8, 10) + '/'
-              //         + punchs[punchs.length].data.toString().substring(5, 7) + '/'
-              //         + punchs[punchs.length].data.toString().substring(0, 4) + '    '
-              //         + punchs[punchs.length].hora.toString()),
-              //     trailing: const Icon(
-              //       Icons.call_received,
-              //       color: Colors.green,
-              //     ),
-              //     tileColor: kPrimaryLightColor,
-              //   ),
-              // ),
-            ),
-          ),
-          GestureDetector(
-              child: const Card(
-                child: ListTile(
-                  title: Text('Ver mais'),
-                  trailing: Icon(
-                    Icons.add,
-                    color: Colors.blue,
-                  ),
-                  tileColor: kPrimaryLightColor,
-                ),
+    _punchPadding = Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ListView.builder(
+        primary: false,
+        shrinkWrap: true,
+        itemCount: widget.punchs.length <= 6 ? widget.punchs.length : 6,
+        itemBuilder: (context, index){
+          return Card(
+            child: ListTile(
+              leading: Icon(Icons.hourglass_bottom),
+              title: Text(widget.punchs[index].status),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Data: ${widget.punchs[index].data}'),
+                  Text('Hora: ${widget.punchs[index].hora}'),
+                ],
               ),
-              onTap: () async {
-                late List<PunchClocking> otherPunchs = [];
-                otherPunchs = await findPunchClocking(widget.tokenEnvia, widget.user);
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => PunchClockingScreen(punchs: otherPunchs,),
-                  ),
-                );
-              }),
-          Text(qrcodeResult),
-          Container(
-            padding: const EdgeInsets.all(50),
-            margin: const EdgeInsets.all(50),
-            child: Center(
-              child: _isLoading
-                  ? const Text('')
-                  : const CircularProgressIndicator(),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -127,7 +78,43 @@ class _DashboardState extends State<Dashboard> {
         showImage: true,
         showBackArrow: true,
       ),
-      body: _scaffoldBody,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(5),
+              margin: const EdgeInsets.all(5),
+              child: Center(
+                child: _isLoading
+                    ? const Text('')
+                    : const CircularProgressIndicator(),
+              ),
+            ),
+            _punchPadding,
+            GestureDetector(
+                child: const Card(
+                  child: ListTile(
+                    title: Text('Ver mais'),
+                    trailing: Icon(
+                      Icons.add,
+                      color: Colors.blue,
+                    ),
+                    tileColor: kPrimaryLightColor,
+                  ),
+                ),
+                onTap: () async {
+                  late List<PunchClocking> otherPunchs = [];
+                  otherPunchs = await findPunchClocking(widget.tokenEnvia, widget.user);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => PunchClockingScreen(punchs: otherPunchs, token: widget.tokenEnvia, user: widget.user,),
+                    ),
+                  );
+                }),
+          ],
+        ),
+      ),
       drawer: Drawer(
         child: Container(
           color: kPrimaryLightColor,
@@ -195,12 +182,16 @@ class _DashboardState extends State<Dashboard> {
               ),
               Row(
                 children: [
+
                   IconButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      late List<PunchClocking> allPunchs = [];
+                      allPunchs = await findPunchClocking(widget.tokenEnvia, widget.user);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => PunchClockingScreen(punchs: [],)));
+                              builder: (context) => PunchClockingScreen(punchs: allPunchs, token: widget.tokenEnvia, user: widget.user
+                                )));
                     },
                     icon: const Icon(Icons.edit),
                     iconSize: 27,
@@ -244,7 +235,7 @@ class _DashboardState extends State<Dashboard> {
   //Colocar em um try
   readQRCode() async {
     setState(() {
-      _isLoading = true;
+      _isLoading = false;
     });
     String code = await FlutterBarcodeScanner.scanBarcode(
       "#FFFFFF",
@@ -296,7 +287,8 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> updateList() async {
     late List<PunchClocking> punchsUpdated = [];
-    Uri urlRegistroColaborador = Uri.parse(urlRegistros.toString()+'?colaboradorId=${widget.user.id}');
+    DateTime data = DateTime.now();
+    Uri urlRegistroColaborador = Uri.parse(urlRegistros.toString()+'?colaboradorId=${widget.user.id}&data='+formatDate(data, [yyyy,'-',mm,'-',dd]));
     try {
       var responsePunch = await http.get(urlRegistroColaborador, headers: {
         'Content-type': 'application/json',
@@ -315,77 +307,27 @@ class _DashboardState extends State<Dashboard> {
     }
     setState(() {
       _isLoading = true;
-      _scaffoldBody = SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView.builder(
-                primary: false,
-                shrinkWrap: true,
-                itemCount: punchsUpdated.length,
-                itemBuilder: (context, index){
-                  return Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.hourglass_bottom),
-                      title: Text(punchsUpdated[index].status),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Data: ${punchsUpdated[index].data}'),
-                          Text('Hora: ${punchsUpdated[index].hora}'),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                // Card(
-                //   child: ListTile(
-                //     title: Text(punchs[punchs.length].colaboradorNome),
-                //     subtitle: Text(punchs[punchs.length].data.toString().substring(8, 10) + '/'
-                //         + punchs[punchs.length].data.toString().substring(5, 7) + '/'
-                //         + punchs[punchs.length].data.toString().substring(0, 4) + '    '
-                //         + punchs[punchs.length].hora.toString()),
-                //     trailing: const Icon(
-                //       Icons.call_received,
-                //       color: Colors.green,
-                //     ),
-                //     tileColor: kPrimaryLightColor,
-                //   ),
-                // ),
-              ),
-            ),
-            GestureDetector(
-                child: const Card(
-                  child: ListTile(
-                    title: Text('Ver mais'),
-                    trailing: Icon(
-                      Icons.add,
-                      color: Colors.blue,
-                    ),
-                    tileColor: kPrimaryLightColor,
-                  ),
+      _punchPadding = Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView.builder(
+          primary: false,
+          shrinkWrap: true,
+          itemCount: punchsUpdated.length <= 6 ? widget.punchs.length : 6,
+          itemBuilder: (context, index) {
+            return Card(
+              child: ListTile(
+                leading: const Icon(Icons.hourglass_bottom),
+                title: Text(punchsUpdated[index].status),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Data: ${punchsUpdated[index].data}'),
+                    Text('Hora: ${punchsUpdated[index].hora}'),
+                  ],
                 ),
-                onTap: () async {
-                  late List<PunchClocking> otherPunchs = [];
-                  otherPunchs = await findPunchClocking(widget.tokenEnvia, widget.user);
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => PunchClockingScreen(punchs: otherPunchs,),
-                    ),
-                  );
-                }),
-            Container(
-              padding: const EdgeInsets.all(50),
-              margin: const EdgeInsets.all(50),
-              child: Center(
-                child: _isLoading
-                    ? const Text('')
-                    : const CircularProgressIndicator(),
               ),
-            ),
-          ],
+            );
+          },
         ),
       );
     });
