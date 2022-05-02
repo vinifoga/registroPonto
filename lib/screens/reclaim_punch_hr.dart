@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,8 @@ import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:registroponto/models/punch_clocking.dart';
 import 'package:registroponto/models/user.dart';
 import 'package:registroponto/screens/punch_clocking.dart';
+import 'package:http/http.dart' as http;
+import 'package:registroponto/screens/punch_update.dart';
 
 import '../constants.dart';
 import 'login_screen.dart';
@@ -22,6 +25,8 @@ class ReclaimPunchHR extends StatefulWidget {
 
 class _ReclaimPunchHRState extends State<ReclaimPunchHR> {
   late List<PunchClocking> otherPunchs;
+  bool _isLoading = true;
+  bool _showError = false;
 
   @override
   void initState() {
@@ -75,8 +80,14 @@ class _ReclaimPunchHRState extends State<ReclaimPunchHR> {
 
   Future<void> updateReclaim(PunchClocking punch) async {
     setState(() {
-
+      _isLoading = false;
     });
+    Navigator.push(context, MaterialPageRoute(builder: (context) => PunchUpdate (
+      token : widget.token,
+      punch : punch,
+      user : widget.user
+    )));
+
   }
 
 
