@@ -17,7 +17,7 @@ import 'package:registroponto/models/organization_unit.dart';
 import 'package:registroponto/screens/employee_list.dart';
 
 Uri urlEmployee =
-    Uri.parse("https://registro-ponto-api.herokuapp.com/colaboradores");
+    Uri.parse("https://registro-ponto-api-v2.herokuapp.com/colaboradores");
 late List<Employee> users = [];
 
 class EmployeeUpdate extends StatefulWidget {

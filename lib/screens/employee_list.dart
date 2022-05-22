@@ -12,13 +12,13 @@ import '../constants.dart';
 import 'employee_register.dart';
 import 'employee_update.dart';
 
-Uri urlJobTitles = Uri.parse("https://registro-ponto-api.herokuapp.com/cargos");
+Uri urlJobTitles = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/cargos");
 late List<JobTitle> jobTitles = [];
 
-Uri urlUnits = Uri.parse("https://registro-ponto-api.herokuapp.com/unidades");
+Uri urlUnits = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/unidades");
 late List<OrganizationUnit> units = [];
 
-Uri urlEmployees = Uri.parse("https://registro-ponto-api.herokuapp.com/colaboradores");
+Uri urlEmployees = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/colaboradores");
 late List<Employee> employees = [];
 
 class EmployeeList extends StatefulWidget {

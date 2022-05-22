@@ -9,7 +9,7 @@ import '../constants.dart';
 import 'employee_register.dart';
 import 'organization_unit_register.dart';
 
-Uri urlUnit = Uri.parse("https://registro-ponto-api.herokuapp.com/unidades");
+Uri urlUnit = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/unidades");
 
 class OrganizationUnitList extends StatefulWidget {
   final String tokenEnvia;

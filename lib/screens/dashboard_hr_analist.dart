@@ -25,15 +25,15 @@ import 'alerts.dart';
 import 'employee_list.dart';
 import 'organization_unit_list.dart';
 
-Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/registros");
+Uri url = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/registros");
 
-Uri urlEmployee = Uri.parse("https://registro-ponto-api.herokuapp.com/colaboradores");
+Uri urlEmployee = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/colaboradores");
 late List<Employee> employees = [];
 
-Uri urlUnits = Uri.parse("https://registro-ponto-api.herokuapp.com/unidades");
+Uri urlUnits = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/unidades");
 late List<OrganizationUnit> units = [];
 
-Uri urlUsers = Uri.parse("https://registro-ponto-api.herokuapp.com/usuarios");
+Uri urlUsers = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/usuarios");
 late List<User> users = [];
 
 class DashboardHRAnalist extends StatefulWidget {

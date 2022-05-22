@@ -13,13 +13,13 @@ import 'dart:convert';
 import '../constants.dart';
 import 'employee_register.dart';
 
-Uri urlRoles = Uri.parse("https://registro-ponto-api.herokuapp.com/roles");
+Uri urlRoles = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/roles");
 late List<Roles> roles = [];
 
-Uri urlEmployees = Uri.parse("https://registro-ponto-api.herokuapp.com/colaboradores");
+Uri urlEmployees = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/colaboradores");
 late List<Employee> employees = [];
 
-Uri urlUsers = Uri.parse("https://registro-ponto-api.herokuapp.com/usuarios");
+Uri urlUsers = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/usuarios");
 
 class UserList extends StatefulWidget {
   final String tokenEnvia;

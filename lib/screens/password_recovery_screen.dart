@@ -11,7 +11,7 @@ import '../constants.dart';
 import 'forget_password_check.dart';
 import 'login_screen.dart';
 
-Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/usuarios/reset-senha-padrao");
+Uri url = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/usuarios/reset-senha-padrao");
 class PasswordRecoveryScreen extends StatelessWidget {
   PasswordRecoveryScreen({
     Key? key,

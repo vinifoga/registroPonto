@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 
 
 Uri urlUnit =
-Uri.parse("https://registro-ponto-api.herokuapp.com/unidades");
+Uri.parse("https://registro-ponto-api-v2.herokuapp.com/unidades");
 class OrganizationUnitRegister extends StatefulWidget {
   final String token;
   OrganizationUnitRegister({Key? key, required this.token}) : super(key: key);

@@ -15,7 +15,7 @@ import 'package:registroponto/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:registroponto/screens/punch_clocking.dart';
 
-Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/registros");
+Uri url = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/registros");
 class ReclaimPunch extends StatefulWidget {
   final String token;
   final User user;

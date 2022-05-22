@@ -18,9 +18,9 @@ import 'package:registroponto/screens/password_recovery_screen.dart';
 import '../constants.dart';
 import 'background.dart';
 
-Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/auth");
-Uri urlUser = Uri.parse("https://registro-ponto-api.herokuapp.com/usuarios");
-Uri urlRegistros = Uri.parse("https://registro-ponto-api.herokuapp.com/registros");
+Uri url = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/auth");
+Uri urlUser = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/usuarios");
+Uri urlRegistros = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/registros");
 
 
 class LoginBody extends StatefulWidget {
@@ -221,7 +221,7 @@ class _LoginBodyState extends State<LoginBody> {
 
   Future<List<PunchClocking>> findPunchClocking(String tokenEnvia, User user) async {
     DateTime data = DateTime.now();
-    Uri urlRegistroColaborador = Uri.parse(urlRegistros.toString()+'?colaboradorId=${user.id}&data='+formatDate(data, [yyyy,'-',mm,'-',dd]));
+    Uri urlRegistroColaborador = Uri.parse(urlRegistros.toString()+'/${user.colaboradorId}/'+formatDate(data, [yyyy,'-',mm,'-',dd]));
     try {
       var responsePunch = await http.get(urlRegistroColaborador, headers: {
         'Content-type': 'application/json',

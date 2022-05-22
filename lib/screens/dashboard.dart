@@ -17,7 +17,7 @@ import '../constants.dart';
 import 'alerts.dart';
 import 'balance.dart';
 
-Uri url = Uri.parse("https://registro-ponto-api.herokuapp.com/registros");
+Uri url = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/registros");
 late List<PunchClocking> punchs = [];
 
 class Dashboard extends StatefulWidget {
@@ -39,7 +39,7 @@ class _DashboardState extends State<Dashboard> {
   late Widget _scaffoldBody;
   late Widget _punchPadding;
   Uri urlRegistros = Uri.parse(
-      'https://registro-ponto-api.herokuapp.com/registros');
+      'https://registro-ponto-api-v2.herokuapp.com/registros');
 
 
   @override
@@ -50,12 +50,12 @@ class _DashboardState extends State<Dashboard> {
       child: ListView.builder(
         primary: false,
         shrinkWrap: true,
-        itemCount: widget.punchs.length <= 6 ? widget.punchs.length : 6,
+        itemCount: widget.punchs.isEmpty ? widget.punchs.length : widget.punchs.length+1,
         itemBuilder: (context, index){
           return Card(
             child: ListTile(
-              leading: Icon(Icons.hourglass_bottom),
-              title: Text(widget.punchs[index].status),
+              leading: const Icon(Icons.hourglass_bottom),
+              title: Text(widget.punchs[index].status ?? ''),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -92,7 +92,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             _punchPadding,
-            GestureDetector(
+            /*GestureDetector(
                 child: const Card(
                   child: ListTile(
                     title: Text('Ver mais'),
@@ -111,7 +111,7 @@ class _DashboardState extends State<Dashboard> {
                       builder: (context) => PunchClockingScreen(punchs: otherPunchs, token: widget.tokenEnvia, user: widget.user,),
                     ),
                   );
-                }),
+                }),*/
           ],
         ),
       ),
@@ -146,40 +146,40 @@ class _DashboardState extends State<Dashboard> {
                   )
                 ],
               ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Alerts()));
-                    },
-                    icon: const Icon(Icons.warning),
-                    iconSize: 27,
-                  ),
-                  const Text(
-                    'Alertas',
-                    style: TextStyle(fontSize: 24),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SickNote()));
-                    },
-                    icon: const Icon(Icons.now_wallpaper),
-                    iconSize: 27,
-                  ),
-                  const Text(
-                    'Enviar Atestado',
-                    style: TextStyle(fontSize: 24),
-                  )
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     IconButton(
+              //       onPressed: () {
+              //         Navigator.push(context,
+              //             MaterialPageRoute(builder: (context) => Alerts()));
+              //       },
+              //       icon: const Icon(Icons.warning),
+              //       iconSize: 27,
+              //     ),
+              //     const Text(
+              //       'Alertas',
+              //       style: TextStyle(fontSize: 24),
+              //     )
+              //   ],
+              // ),
+              // Row(
+              //   children: [
+              //     IconButton(
+              //       onPressed: () {
+              //         Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => const SickNote()));
+              //       },
+              //       icon: const Icon(Icons.now_wallpaper),
+              //       iconSize: 27,
+              //     ),
+              //     const Text(
+              //       'Enviar Atestado',
+              //       style: TextStyle(fontSize: 24),
+              //     )
+              //   ],
+              // ),
               Row(
                 children: [
 
@@ -224,10 +224,32 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: floatActionButtonColor,
-        onPressed: readQRCode,
-        child: const Icon(Icons.fingerprint), //icon inside button
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            FloatingActionButton(
+              backgroundColor: floatActionButtonColor,
+              onPressed: () async {
+                late List<PunchClocking> otherPunchs = [];
+                otherPunchs = await findPunchClocking(widget.tokenEnvia, widget.user);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => PunchClockingScreen(punchs: otherPunchs, token: widget.tokenEnvia, user: widget.user,),
+                  ),
+                );
+              },
+              child: const Icon(Icons.add), //icon inside button
+            ),
+            FloatingActionButton(
+              backgroundColor: floatActionButtonColor,
+              onPressed: readQRCode,
+              child: const Icon(Icons.fingerprint), //icon inside button
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -288,7 +310,7 @@ class _DashboardState extends State<Dashboard> {
   Future<void> updateList() async {
     late List<PunchClocking> punchsUpdated = [];
     DateTime data = DateTime.now();
-    Uri urlRegistroColaborador = Uri.parse(urlRegistros.toString()+'?colaboradorId=${widget.user.id}&data='+formatDate(data, [yyyy,'-',mm,'-',dd]));
+    Uri urlRegistroColaborador = Uri.parse(urlRegistros.toString()+'/${widget.user.colaboradorId}/'+formatDate(data, [yyyy,'-',mm,'-',dd]));
     try {
       var responsePunch = await http.get(urlRegistroColaborador, headers: {
         'Content-type': 'application/json',
@@ -312,7 +334,7 @@ class _DashboardState extends State<Dashboard> {
         child: ListView.builder(
           primary: false,
           shrinkWrap: true,
-          itemCount: punchsUpdated.length <= 6 ? widget.punchs.length : 6,
+          itemCount: punchsUpdated.length,
           itemBuilder: (context, index) {
             return Card(
               child: ListTile(
@@ -334,7 +356,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<List<PunchClocking>> findPunchClocking(String tokenEnvia, User user) async {
-    Uri urlRegistroColaborador = Uri.parse(urlRegistros.toString()+'?colaboradorId=${user.id}&data=');
+    Uri urlRegistroColaborador = Uri.parse(urlRegistros.toString()+'/${user.colaboradorId}/99');
     try {
       var responsePunch = await http.get(urlRegistroColaborador, headers: {
         'Content-type': 'application/json',

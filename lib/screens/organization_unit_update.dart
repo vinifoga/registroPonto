@@ -15,7 +15,7 @@ import 'package:registroponto/models/organization_unit.dart';
 
 
 Uri urlUnit =
-Uri.parse("https://registro-ponto-api.herokuapp.com/unidades");
+Uri.parse("https://registro-ponto-api-v2.herokuapp.com/unidades");
 class OrganizationUnitUpdate extends StatefulWidget {
   final String token;
   final OrganizationUnit unit;

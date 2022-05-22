@@ -13,7 +13,7 @@ import 'package:registroponto/screens/dashboard_hr_analist.dart';
 import 'package:registroponto/screens/user_list.dart';
 import 'package:http/http.dart' as http;
 
-Uri urlUsers = Uri.parse("https://registro-ponto-api.herokuapp.com/usuarios");
+Uri urlUsers = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/usuarios");
 
 class UserRegister extends StatefulWidget {
   final String token;
