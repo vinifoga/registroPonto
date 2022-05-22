@@ -6,10 +6,15 @@ import 'package:registroponto/components/input_text.dart';
 import 'package:registroponto/components/rounded_button.dart';
 import 'package:registroponto/components/select_type_reclaim_punch.dart';
 import 'package:registroponto/models/punch_clocking.dart';
+import 'package:registroponto/models/user.dart';
+
 
 
 class Balance extends StatefulWidget {
-  Balance({Key? key}) : super(key: key);
+  final String token;
+  final String balance;
+  final User user;
+  const Balance({Key? key, required this.token, required this.balance, required this.user}) : super(key: key);
 
   @override
   State<Balance> createState() => _BalanceState();
@@ -31,12 +36,14 @@ class _BalanceState extends State<Balance> {
 
   final moreInfo = TextEditingController();
 
+  get balance => widget.balance;
+
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat("dd-MM-yyyy");
     final hourFormat = DateFormat("HH:mm");
     return Scaffold(
-      appBar: const AppBarRpWithBottom(showBackArrow: true, showImage: false, appBarTitle: 'Utilizar Saldo', bottomText: 'Saldo +5 horas',),
+      appBar: AppBarRpWithBottom(showBackArrow: true, showImage: false, appBarTitle: 'Utilizar Saldo', bottomText: balance.toString(),),
       body: SingleChildScrollView(
         child: Form(
           child: Padding(

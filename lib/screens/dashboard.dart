@@ -9,6 +9,7 @@ import 'package:registroponto/models/punch_clocking.dart';
 import 'package:registroponto/models/sort_pageable_punch_clocking.dart';
 import 'package:registroponto/models/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:registroponto/screens/login_screen.dart';
 import 'package:registroponto/screens/punch_clocking.dart';
 import 'package:registroponto/screens/sick_note.dart';
@@ -40,6 +41,9 @@ class _DashboardState extends State<Dashboard> {
   late Widget _punchPadding;
   Uri urlRegistros = Uri.parse(
       'https://registro-ponto-api-v2.herokuapp.com/registros');
+  Uri url = Uri.parse(
+      'https://registro-ponto-api-v2.herokuapp.com');
+  final hourFormat = DateFormat("HH:mm:ss");
 
 
   @override
@@ -133,9 +137,10 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      String balance = await findBalance(widget.tokenEnvia, widget.user);
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Balance()));
+                          MaterialPageRoute(builder: (context) => Balance(user: widget.user, balance: balance, token: widget.tokenEnvia,)));
                     },
                     icon: const Icon(Icons.account_balance),
                     iconSize: 27,
@@ -376,4 +381,23 @@ class _DashboardState extends State<Dashboard> {
     return punchs;
   }
 
+  Future<String> findBalance(String tokenEnvia, User user) async {
+    Uri urlRegistroColaborador = Uri.parse(url.toString()+'/calcula-banco/${user.colaboradorId}');
+    var balance;
+    try {
+      var response = await http.get(urlRegistroColaborador, headers: {
+        'Content-type': 'application/json',
+        'Authorization': tokenEnvia
+      });
+      if (response.statusCode == 200) {
+        balance = response.body;
+
+      } else {
+        throw Exception('Falha ao buscar Registros');
+      }
+    } catch (e) {
+      ('Falha ao buscar Registros');
+    }
+    return balance;
+  }
 }
