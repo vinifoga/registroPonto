@@ -43,7 +43,7 @@ class _BalanceState extends State<Balance> {
     final dateFormat = DateFormat("dd-MM-yyyy");
     final hourFormat = DateFormat("HH:mm");
     return Scaffold(
-      appBar: AppBarRpWithBottom(showBackArrow: true, showImage: false, appBarTitle: 'Utilizar Saldo', bottomText: balance.toString(),),
+      appBar: AppBarRpWithBottom(showBackArrow: true, showImage: false, appBarTitle: 'Utilizar Saldo', bottomText: balance.toString().replaceAll("\"", ""),),
       body: SingleChildScrollView(
         child: Form(
           child: Padding(

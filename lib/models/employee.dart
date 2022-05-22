@@ -26,6 +26,7 @@ class Employee{
   late final horaEntraSabado;
   late final horaSaiSabado;
   late OrganizationUnit unidadeOrganizacional;
+  late final saldoAcumulado;
 
 
 
@@ -48,7 +49,8 @@ class Employee{
       required this.homeOffice,
       this.horaEntraSabado,
       this.horaSaiSabado,
-      required this.unidadeOrganizacional});
+      required this.unidadeOrganizacional,
+      this.saldoAcumulado});
 
   factory Employee.fromJson(Map<String, dynamic> json) => _$EmployeeFromJson(json);
 

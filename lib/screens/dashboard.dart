@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:date_format/date_format.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,7 +27,7 @@ class Dashboard extends StatefulWidget {
   final User user;
   final List<PunchClocking> punchs;
 
-  const Dashboard({Key? key, required this.tokenEnvia, required this.user, required this.punchs, })
+  Dashboard({Key? key, required this.tokenEnvia, required this.user, required this.punchs, })
       : super(key: key);
 
   @override
@@ -167,24 +168,24 @@ class _DashboardState extends State<Dashboard> {
               //     )
               //   ],
               // ),
-              // Row(
-              //   children: [
-              //     IconButton(
-              //       onPressed: () {
-              //         Navigator.push(
-              //             context,
-              //             MaterialPageRoute(
-              //                 builder: (context) => const SickNote()));
-              //       },
-              //       icon: const Icon(Icons.now_wallpaper),
-              //       iconSize: 27,
-              //     ),
-              //     const Text(
-              //       'Enviar Atestado',
-              //       style: TextStyle(fontSize: 24),
-              //     )
-              //   ],
-              // ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SickNote()));
+                    },
+                    icon: const Icon(Icons.now_wallpaper),
+                    iconSize: 27,
+                  ),
+                  const Text(
+                    'Enviar Atestado',
+                    style: TextStyle(fontSize: 24),
+                  )
+                ],
+              ),
               Row(
                 children: [
 

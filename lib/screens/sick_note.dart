@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,10 +14,11 @@ class SickNote extends StatefulWidget {
 }
 
 class _SickNoteState extends State<SickNote> {
+  final FirebaseStorage storage = FirebaseStorage.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarRp(
+      appBar: const AppBarRp(
         appBarTitle: 'Últimos Enviados',
         showImage: false,
         showBackArrow: true,
@@ -27,21 +31,21 @@ class _SickNoteState extends State<SickNote> {
               onTap: () {
                 _showImageOptions(context);
               },
-              child: Card(
+              child: const Card(
                 child: ListTile(
                   title: Text('Enviar'),
                   trailing: Icon(Icons.arrow_upward),
                 ),
               ),
             ),
-            GestureDetector(
-              child: Card(
-                child: ListTile(
-                  title: Text('Data: 02/05/2020'),
-                  trailing: Icon(Icons.remove_red_eye),
-                ),
-              ),
-            ),
+            // GestureDetector(
+            //   child: Card(
+            //     child: ListTile(
+            //       title: Text('Data: 02/05/2020'),
+            //       trailing: Icon(Icons.remove_red_eye),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -66,6 +70,7 @@ class _SickNoteState extends State<SickNote> {
                       function: () async {
                         final XFile? image = await _picker.pickImage(
                             source: ImageSource.gallery);
+                        pickAndUploadImage(image);
                         Navigator.pop(context);
                       },
                     ),
@@ -75,6 +80,7 @@ class _SickNoteState extends State<SickNote> {
                       function: () async {
                         final XFile? image =
                             await _picker.pickImage(source: ImageSource.camera);
+                        pickAndUploadImage(image);
                         Navigator.pop(context);
                       },
                     ),
@@ -85,5 +91,22 @@ class _SickNoteState extends State<SickNote> {
             onClosing: () {},
           );
         });
+  }
+
+  pickAndUploadImage(XFile? image) async {
+    XFile? file = image;
+    if(file != null){
+      await upload(file.path);
+    }
+  }
+
+  Future<void> upload(String path) async {
+    File file = File(path);
+    try{
+      String ref = 'images/img-${DateTime.now().toString()}.jpg';
+      await storage.ref(ref).putFile(file);
+    } on FirebaseException catch(e){
+      throw Exception('Erro no upload: ${e.code}');
+    }
   }
 }

@@ -27,6 +27,7 @@ Employee _$EmployeeFromJson(Map<String, dynamic> json) => Employee(
       horaSaiSabado: json['horaSaiSabado'],
       unidadeOrganizacional: OrganizationUnit.fromJson(
           json['unidadeOrganizacional'] as Map<String, dynamic>),
+      saldoAcumulado: json['saldoAcumulado'],
     );
 
 Map<String, dynamic> _$EmployeeToJson(Employee instance) => <String, dynamic>{
@@ -49,4 +50,5 @@ Map<String, dynamic> _$EmployeeToJson(Employee instance) => <String, dynamic>{
       'horaEntraSabado': instance.horaEntraSabado,
       'horaSaiSabado': instance.horaSaiSabado,
       'unidadeOrganizacional': instance.unidadeOrganizacional,
+      'saldoAcumulado' : instance.saldoAcumulado,
     };
