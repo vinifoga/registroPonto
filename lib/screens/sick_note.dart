@@ -6,8 +6,11 @@ import 'package:registroponto/components/app_bar_rp.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:registroponto/components/icon_button_text.dart';
 
+import '../models/user.dart';
+
 class SickNote extends StatefulWidget {
-  const SickNote({Key? key}) : super(key: key);
+  final User user;
+  const SickNote({Key? key, required this.user}) : super(key: key);
 
   @override
   State<SickNote> createState() => _SickNoteState();
@@ -15,11 +18,13 @@ class SickNote extends StatefulWidget {
 
 class _SickNoteState extends State<SickNote> {
   final FirebaseStorage storage = FirebaseStorage.instance;
+  bool uploading = false;
+  double total = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarRp(
-        appBarTitle: 'Últimos Enviados',
+      appBar: AppBarRp(
+        appBarTitle: uploading ? '${total.round()}% enviado' : 'Enviar Arquivo',
         showImage: false,
         showBackArrow: true,
       ),
@@ -96,15 +101,25 @@ class _SickNoteState extends State<SickNote> {
   pickAndUploadImage(XFile? image) async {
     XFile? file = image;
     if(file != null){
-      await upload(file.path);
+      UploadTask task = await upload(file.path);
+      task.snapshotEvents.listen((TaskSnapshot snapshot) async {
+        if(snapshot.state == TaskState.running){
+          setState(() {
+            uploading = true;
+            total = (snapshot.bytesTransferred/snapshot.totalBytes) * 100;
+          });
+        } else  if(snapshot.state == TaskState.running){
+          setState(() => uploading = false);
+        }
+      });
     }
   }
 
-  Future<void> upload(String path) async {
+  Future<UploadTask> upload(String path) async {
     File file = File(path);
     try{
-      String ref = 'images/img-${DateTime.now().toString()}.jpg';
-      await storage.ref(ref).putFile(file);
+      String ref = 'images/img-${widget.user.nome.toString()}-${DateTime.now().toString()}.jpg';
+      return storage.ref(ref).putFile(file);
     } on FirebaseException catch(e){
       throw Exception('Erro no upload: ${e.code}');
     }

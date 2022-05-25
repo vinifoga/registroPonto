@@ -175,7 +175,7 @@ class _DashboardState extends State<Dashboard> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const SickNote()));
+                              builder: (context) => SickNote(user: widget.user)));
                     },
                     icon: const Icon(Icons.now_wallpaper),
                     iconSize: 27,

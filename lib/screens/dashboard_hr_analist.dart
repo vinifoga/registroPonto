@@ -22,6 +22,7 @@ import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 import 'alerts.dart';
+import 'arquives.dart';
 import 'employee_list.dart';
 import 'organization_unit_list.dart';
 
@@ -112,6 +113,18 @@ class _DashboardHRAnalistState extends State<DashboardHRAnalist> {
                       findUsers();
                     }, icon: const Icon(Icons.supervised_user_circle), iconSize: 27,),
                     const Text('Usuários', style: TextStyle(fontSize: 24),)
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: Row(
+                  children: [
+                    IconButton(onPressed: () async{
+                      Navigator.push(context,
+                          MaterialPageRoute(builder : (context) => Arquives()));
+                    }, icon: const Icon(Icons.insert_drive_file_sharp), iconSize: 27,),
+                    const Text('Arquivos', style: TextStyle(fontSize: 24),)
                   ],
                 ),
               ),
