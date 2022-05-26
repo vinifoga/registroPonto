@@ -10,6 +10,7 @@ import 'package:registroponto/models/organization_unit.dart';
 import 'package:registroponto/models/punch_clocking.dart';
 import 'package:registroponto/models/sort_pageable_punch_clocking.dart';
 import 'package:registroponto/models/user.dart';
+import 'package:registroponto/screens/error_page.dart';
 import 'package:registroponto/screens/exit.dart';
 import 'package:registroponto/screens/login_screen.dart';
 import 'package:registroponto/screens/more_options.dart';
@@ -21,6 +22,8 @@ import 'package:http/http.dart' as http;
 
 
 import '../constants.dart';
+import '../models/punch_clocking_hr.dart';
+import '../models/sort_pageable_punch_clocking_hr.dart';
 import 'alerts.dart';
 import 'arquives.dart';
 import 'employee_list.dart';
@@ -48,7 +51,6 @@ class DashboardHRAnalist extends StatefulWidget {
 
 class _DashboardHRAnalistState extends State<DashboardHRAnalist> {
   bool _isLoading = false;
-  late List<PunchClocking> punchs;
 
   @override
   Widget build(BuildContext context) {
@@ -245,22 +247,24 @@ class _DashboardHRAnalistState extends State<DashboardHRAnalist> {
   }
 
   Future<void> findPunchClocking() async {
+    List<PunchClockingHR> punchs = [];
     setState(() {
       _isLoading = true;
     });
-    Uri urlRegistroColaborador = Uri.parse(url.toString()+'?colaboradorId=&data=');
+    Uri urlRegistroColaborador = Uri.parse('https://registro-ponto-api-v2.herokuapp.com/registros/nao-normal');
     try {
       var responsePunch = await http.get(urlRegistroColaborador, headers: {
         'Content-type': 'application/json',
         'Authorization': widget.tokenEnvia
       });
       if (responsePunch.statusCode == 200) {
-        Map<String, dynamic> map = jsonDecode(responsePunch.body.toString());
-        SortPageablePunchClocking sortPageablePunchClocking =
-        SortPageablePunchClocking.fromJson(map);
-        punchs = sortPageablePunchClocking.content;
+          punchs = (json.decode(responsePunch.body) as List).map((e) => PunchClockingHR.fromJson(e)).toList();
       } else {
-        throw Exception('Falha ao buscar Registros');
+        Navigator.push(context,
+            MaterialPageRoute(builder : (context) => ErrorPage()));
+        setState(() {
+          _isLoading = false;
+        });
       }
     } catch (e) {
       ('Falha ao buscar Registros');

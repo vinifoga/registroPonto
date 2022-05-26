@@ -80,10 +80,10 @@ class _EmployeeListState extends State<EmployeeList> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                'Cargo: ${widget.employees[index].cargo.descricao}'),
+                                'Cargo: ${widget.employees[index].cargo.descricao.toString()}'),
                             Text(
-                                'Departamento: ${widget.employees[index].cargo.departamento.descricao}'),
-                            Text('Status: ${widget.employees[index].ativo}'),
+                                'Departamento: ${widget.employees[index].cargo.departamento.descricao.toString()}'),
+                            widget.employees[index].ativo == true ? Text('Status: Ativo') : Text('Status = Inativo'),
                           ],
                         ),
                         trailing: IconButton(

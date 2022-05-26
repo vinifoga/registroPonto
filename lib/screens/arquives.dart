@@ -58,23 +58,39 @@ class _ArquivesState extends State<Arquives> {
           Padding(padding: const EdgeInsets.all(24),
           child: arqs.isEmpty ? const Center(child: Text('Não há imagens!'),) : 
           ListView.builder(itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              child: ListTile(
-                leading: SizedBox(
-                  width: 60,
-                  height: 40,
-                  child: Image.network(arqs[index],
-                  fit: BoxFit.cover,),
-                ),
-                title: Text(refs[index].fullPath),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => deleteImage(index),
+            return Dismissible(
+              key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
+              background: Container(
+                color: Colors.red,
+                child: const Align(
+                  alignment: Alignment(-0.9, 0.0),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-              onTap: () {
-                downloadImage(refs[index]);
+              direction: DismissDirection.startToEnd,
+              onDismissed: (direction) {
+                setState(() async {
+                  await deleteImage(index);
+                });
               },
+              child: GestureDetector(
+                child: ListTile(
+                  leading: SizedBox(
+                    width: 60,
+                    height: 40,
+                    child: Image.network(arqs[index],
+                    fit: BoxFit.cover,),
+                  ),
+                  title: Text(refs[index].fullPath),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.download),
+                    onPressed: () => downloadImage(refs[index]),
+                  ),
+                ),
+              ),
             );
           },
           itemCount: arqs.length,

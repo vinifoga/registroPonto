@@ -15,10 +15,12 @@ import 'package:registroponto/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:registroponto/screens/punch_clocking.dart';
 
+import '../models/punch_clocking_hr.dart';
+
 Uri url = Uri.parse("https://registro-ponto-api-v2.herokuapp.com/registros");
 class PunchUpdate extends StatefulWidget {
   final String token;
-  final PunchClocking punch;
+  final PunchClockingHR punch;
   final User user;
   const PunchUpdate({Key? key, required this.token, required this.punch, required this.user}) : super(key: key);
 
@@ -32,7 +34,7 @@ class _PunchUpdateState extends State<PunchUpdate> {
   final formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   bool _showError = false;
-  PunchClocking? _editedPunch;
+  PunchClockingHR? _editedPunch;
 
   final dateController = TextEditingController();
   final hourController = TextEditingController();

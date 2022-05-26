@@ -50,5 +50,5 @@ Map<String, dynamic> _$EmployeeToJson(Employee instance) => <String, dynamic>{
       'horaEntraSabado': instance.horaEntraSabado,
       'horaSaiSabado': instance.horaSaiSabado,
       'unidadeOrganizacional': instance.unidadeOrganizacional,
-      'saldoAcumulado' : instance.saldoAcumulado,
+      'saldoAcumulado': instance.saldoAcumulado,
     };

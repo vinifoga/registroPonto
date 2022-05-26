@@ -11,6 +11,7 @@ import 'package:registroponto/models/sort_pageable_punch_clocking.dart';
 import 'package:registroponto/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:registroponto/screens/error_page.dart';
 import 'package:registroponto/screens/login_screen.dart';
 import 'package:registroponto/screens/punch_clocking.dart';
 import 'package:registroponto/screens/sick_note.dart';
@@ -139,9 +140,15 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   IconButton(
                     onPressed: () async {
-                      String balance = await findBalance(widget.tokenEnvia, widget.user);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Balance(user: widget.user, balance: balance, token: widget.tokenEnvia,)));
+                      try{
+                        String balance = await findBalance(widget.tokenEnvia, widget.user);
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Balance(user: widget.user, balance: balance, token: widget.tokenEnvia,)));
+                      } catch (e){
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => ErrorPage()));
+                      }
+
                     },
                     icon: const Icon(Icons.account_balance),
                     iconSize: 27,

@@ -76,7 +76,8 @@ class _UserListState extends State<UserList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Email: ${widget.users[index].email}'),
-                              Text('Perfil: ${widget.users[index].roles.first.nomeRole}'),
+                              widget.users[index].roles.first.nomeRole == 'ROLE_COLABORADOR' ? Text('Perfil: Colaborador') :
+                            Text('Perfil: Responsável RH')
                             ],
                           ),
                           trailing: IconButton(

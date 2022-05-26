@@ -10,10 +10,11 @@ import 'package:http/http.dart' as http;
 import 'package:registroponto/screens/punch_update.dart';
 
 import '../constants.dart';
+import '../models/punch_clocking_hr.dart';
 import 'login_screen.dart';
 
 class ReclaimPunchHR extends StatefulWidget {
-  final List<PunchClocking> punchs;
+  final List<PunchClockingHR> punchs;
   final String token;
   final User user;
 
@@ -24,7 +25,7 @@ class ReclaimPunchHR extends StatefulWidget {
 }
 
 class _ReclaimPunchHRState extends State<ReclaimPunchHR> {
-  late List<PunchClocking> otherPunchs;
+  late List<PunchClockingHR> otherPunchs;
   bool _isLoading = true;
   bool _showError = false;
 
@@ -58,6 +59,7 @@ class _ReclaimPunchHRState extends State<ReclaimPunchHR> {
                           children: [
                             Text('Data: ${otherPunchs[index].data}'),
                             Text('Hora: ${otherPunchs[index].hora}'),
+                            Text('Colaborador: ${otherPunchs[index].colaboradorNome}')
                           ],
                         ),
                         trailing: IconButton(
@@ -78,7 +80,7 @@ class _ReclaimPunchHRState extends State<ReclaimPunchHR> {
     );
   }
 
-  Future<void> updateReclaim(PunchClocking punch) async {
+  Future<void> updateReclaim(PunchClockingHR punch) async {
     setState(() {
       _isLoading = false;
     });
